@@ -16,7 +16,7 @@ namespace Clustering {
 
         Point point;
         LNodePtr next;
-        LNode(const Point &p, LNodePtr n);
+        LNode(const Point &p, LNodePtr n) : point(p), next(n) {}
 
     };
 
