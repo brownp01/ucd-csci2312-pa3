@@ -1190,1154 +1190,1154 @@ void test_point_IO(ErrorContext &ec, unsigned int numRuns) {
 // - - - - - - - - - - C L U S T E R - - - - - - - - - -
 
 // Smoketest: constructor, copy constructor, destructor
-//void test_cluster_smoketest(ErrorContext &ec) {
-//    bool pass;
-//
-//    ec.DESC("--- Test - Cluster - Smoketest ---");
-//
-//    ec.DESC("constructor, destructor");
-//    pass = true;
-//    for (int i = 0; i < 10; i ++) {
-//
-//        Cluster c(30);
-//    }
-//    ec.result(pass);
-//
-//
-//    ec.DESC("size getter - implement if you haven't");
-//    pass = true;
-//    for (int i = 0; i < 10; i ++) {
-//
-//        // Construct a Point
-//        // At the end of the block, destructor will be called
-//        Cluster c(30);
-//
-//        pass = (c.getSize() == 0);
-//        if (!pass) break;
-//    }
-//    ec.result(pass);
-//
-//
-//    ec.DESC("copy constructor");
-//    pass = true;
-//    for (int i = 0; i < 10; i ++) {
-//
-//        Cluster c1(30), c2(c1);
-//
-//        pass = (c1 == c2);
-//        if (!pass) break;
-//    }
-//    ec.result(pass);
-//
-//    ec.DESC("zero dimensions");
-//    pass = true;
-//    for (int i = 0; i < 10; i ++) {
-//
-//        // Construct a Cluster
-//        // At the end of the block, destructor will be called
-//        try {
-//            Cluster c1(0);
-//            pass = false;
-//        } catch (ZeroDimensionsEx &ex) {
-//            std::cerr << "Caught exception: " << ex << std::endl;
-//            pass = (ex.getName() == "ZeroDimensionsEx");
-//        }
-//
-//        if (!pass) break;
-//    }
-//    ec.result(pass);
-//
-//}
-//
-//// add, remove, operator[]
-//void test_cluster_addremove(ErrorContext &ec, unsigned int numRuns) { // TODO add operator[]
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - Cluster - Add/remove points ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-//        ec.DESC("add and check with size getter");
-//
-//        {
-//            Cluster c1(50);
-//            c1.add(Point(50));
-//            c1.add(Point(50));
-//            c1.add(Point(50));
-//
-//            pass = (c1.getSize() == 3);
-//
-//            ec.result(pass);
-//        } // by default, points will get released here
-//
-//
-//        ec.DESC("add, remove, and check with size getter");
-//
-//        {
-//            Point   p1(10),
-//                    p2(10),
-//                    p3(10);
-//            Cluster c1(10);
-//            c1.add(p1); c1.add(p2); c1.add(p3);
-//            c1.remove(p1); c1.remove(p2); c1.remove(p3);
-//
-//            pass = (c1.getSize() == 0);
-//
-//            ec.result(pass);
-//        } // by default, points will get released here
-//
-//        ec.DESC("add, check with cluster equality, remove");
-//
-//        {
-//            Point   p1(10),
-//                    p2(10),
-//                    p3(10);
-//
-//            Cluster c1(10), c2(10);
-//            c1.add(p1); c1.add(p2); c1.add(p3);
-//            c2.add(p1); c2.add(p2); c2.add(p3);
-//
-//            pass = (c1 == c2);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("check point after add and remove");
-//
-//        {
-//            Point   p1(10);
-//
-//            for (int i = 0; i < 10; i++)
-//                p1[i] = 5.4 * i * i + 3.4 * i + 1.6;
-//
-//            Cluster c1(10);
-//            c1.add(p1);
-//            Point p2 = c1.remove(p1);
-//
-//            pass = (p1 == p2);
-//
-//            ec.result(pass);
-//        }
-//    }
-//}
-//
-//// Containment
-//void test_cluster_contain(ErrorContext &ec, unsigned int numRuns) {
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - Cluster - Containment ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-//        ec.DESC("cluster with one point");
-//
-//        {
-//            Point p(10);
-//            p[0] = p[2] = p[4] = p[8] = 6.705;
-//            Cluster c(10);
-//            c.add(p);
-//
-//            pass = c.contains(p);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("contain: DimensionalityMismatchEx");
-//
-//        {
-//            Point p(10);
-//            p[0] = p[2] = p[4] = p[8] = 6.705;
-//            Cluster c(10);
-//            c.add(p);
-//
-//            Point p1(12);
-//
-//            pass = true;
-//            try {
-//                pass = c.contains(p1);
-//                pass = false;
-//            } catch (DimensionalityMismatchEx &ex) {
-//                std::cerr << "Caught exception: " << ex << std::endl;
-//                pass = (ex.getName() == "DimensionalityMismatchEx");
-//            }
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("cluster with several points");
-//
-//        {
-//            Point p(10);
-//            p[0] = p[2] = p[4] = p[8] = 6.705;
-//            Cluster c(10);
-//
-//            for (int i = 0; i < 10; i ++) {
-//                Point pp(10);
-//                for (int j = 0; j < 10; j ++) {
-//                    pp[i] = 3.4 + i * 2.1 + i * i;
-//                }
-//                c.add(pp);
-//            }
-//            c.add(p);
-//
-//            pass = c.contains(p);
-//
-//            ec.result(pass);
-//        }
-//    }
-//}
-//
-//// Inner class Move
-//void test_cluster_move(ErrorContext &ec, unsigned int numRuns) {
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - Cluster - Move ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-//        ec.DESC("move 1 point across");
-//
-//        {
-//            Cluster c1(100), c2(100);
-//            Point p(100);
-//            c1.add(p);
-//
-//            pass = c1.contains(p);
-//
-//            Cluster::Move move(p, c1, c2);
-//            move.perform();
-//
-//            pass = pass && (! c1.contains(p)) && c2.contains(p);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("move 1 point back and forth");
-//
-//        {
-//            Cluster c1(100), c2(100);
-//            Point p(100);
-//            c1.add(p);
-//
-//            pass = c1.contains(p);
-//
-//            Cluster::Move move1(p, c1, c2);
-//            move1.perform();
-//
-//            pass = pass && (! c1.contains(p)) && c2.contains(p);
-//
-//            Cluster::Move move2(p, c2, c1);
-//            move2.perform();
-//
-//            pass = pass && c1.contains(p) && (! c2.contains(p));
-//
-//            ec.result(pass);
-//        }
-//    }
-//}
-//
-//// Copy constructor
-//void test_cluster_copying(ErrorContext &ec, unsigned int numRuns) {
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - Cluster - Copy ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-//        ec.DESC("simple copy");
-//
-//        {
-//            Point   p1(10),
-//                    p2(10),
-//                    p3(10);
-//            Cluster c1(10);
-//            c1.add(p1); c1.add(p2); c1.add(p3);
-//            Cluster c2(c1);
-//
-//            pass = (c1 == c2);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("chained copy");
-//
-//        {
-//            Point   p1(10),
-//                    p2(10),
-//                    p3(10);
-//            Cluster c1(10);
-//            c1.add(p1); c1.add(p2); c1.add(p3);
-//            Cluster c2(c1), c3(c2), c4(c3);
-//
-//            pass = (c1 == c4);
-//
-//            ec.result(pass);
-//        }
-//    }
-//}
-//
-//// operator=
-//void test_cluster_assignment(ErrorContext &ec, unsigned int numRuns) {
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - Cluster - Assign ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-//        ec.DESC("simple assignment");
-//
-//        {
-//            Point   p1(10),
-//                    p2(10),
-//                    p3(10);
-//
-//            Cluster c1(10);
-//            c1.add(p1); c1.add(p2); c1.add(p3);
-//            Cluster c2 = c1;
-//
-//            pass = (c1 == c2);
-//
-//            ec.result(pass);
-//        }
-//
-//
-//        ec.DESC("assignment: DimensionalityMismatchEx");
-//
-//        {
-//            Point   p1(10),
-//                    p2(10),
-//                    p3(10);
-//
-//            Cluster c1(10);
-//            c1.add(p1); c1.add(p2); c1.add(p3);
-//
-//            Cluster c2(15);
-//
-//            pass = true;
-//            try {
-//                c2 = c1;
-//                pass = false;
-//            } catch (DimensionalityMismatchEx &ex) {
-//                std::cerr << "Caught exception: " << ex << std::endl;
-//                pass = (ex.getName() == "DimensionalityMismatchEx");
-//            }
-//
-//            ec.result(pass);
-//        }
-//
-//
-//        ec.DESC("assignment causing deletion");
-//
-//        {
-//            Point   p1(10),
-//                    p2(10),
-//                    p3(10);
-//
-//            Cluster c1(10);
-//            c1.add(p1); c1.add(p2); c1.add(p3);
-//            Cluster c2(10);
-//            // add some other points
-//            c2.add(Point(10));
-//            c2.add(Point(10));
-//            c2.add(Point(10));
-//
-//            c2 = c1;
-//
-//            pass = (c1 == c2);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("chained assignment");
-//
-//        {
-//            Point   p1(10),
-//                    p2(10),
-//                    p3(10);
-//
-//            Cluster c1(10);
-//            c1.add(p1); c1.add(p2); c1.add(p3);
-//            Cluster c2 = c1;
-//            Cluster c3 = c2;
-//            Cluster c4 = c3;
-//
-//            pass = (c1 == c4);
-//
-//            ec.result(pass);
-//        }
-//    }
-//}
-//
-//// subscript (operator[])
-//void test_cluster_subscript(ErrorContext &ec, unsigned int numRuns) {
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - Cluster - Subscript ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-//        ec.DESC("cluster with one point");
-//
-//        {
-//            Cluster c(10);
-//            Point p(10);
-//            p[5] = 3.14;
-//
-//            c.add(p);
-//            Point p1 = c[0];
-//
-//            pass = p1[5] == 3.14;
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("cluster with several points");
-//
-//        {
-//            Cluster c(10);
-//            for (int i = 0; i < 10; i ++) {
-//                Point p(10);
-//                p[5] = 3.14;
-//                c.add(p);
-//            }
-//
-//            pass = true;
-//            for (int i = 0; i < 10; i ++) {
-//                Point p1 = c[i];
-//                pass = pass && (p1[5] == 3.14);
-//            }
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("const operator[]");
-//
-//        {
-//            Cluster c(100);
-//            for (int i = 0; i < 200; i++)
-//                c.add(Point(100));
-//
-//            pass = (c.getSize() == 200);
-//
-//            for (int i = 0; i < 200; i++) {
-//                Point tempPt = c[i];
-//            }
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("check no non-const operator[] (compile time)");
-//
-//        {
-//            Cluster c(100);
-//            for (int i = 0; i < 200; i++)
-//                c.add(Point(100));
-//
-//            pass = true;
-//
-//            for (int i = 0; i < 200; i++) {
-////                c[i] = Point(100); // c[i] read-only and not assignable
-//            }
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("operator[]: OutOfBoundsEx");
-//
-//        {
-//            Cluster c(100);
-//            for (int i = 0; i < 200; i++)
-//                c.add(Point(100));
-//
-//            pass = true;
-//
-//            try {
-//                for (int i = 0; i < 201; i++) {
-//                    Point p = c[i];
-//                }
-//                pass = false;
-//            } catch (OutOfBoundsEx &ex) {
-//                std::cerr << "Caught exception: " << ex << std::endl;
-//                pass = pass && (ex.getName() == "OutOfBoundsEx");
-//            }
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("operator[]: EmptyClusterEx");
-//
-//        {
-//            Cluster c(100);
-//
-//            pass = true;
-//
-//            try {
-//                for (int i = 0; i < 10; i++) {
-//                    Point p = c[i];
-//                }
-//                pass = false;
-//            } catch (EmptyClusterEx &ex) {
-//                std::cerr << "Caught exception: " << ex << std::endl;
-//                pass = pass && (ex.getName() == "EmptyClusterEx");
-//            }
-//
-//            ec.result(pass);
-//        }
-//    }
-//}
-//
-//// operator==, operator!=
-//void test_cluster_equality(ErrorContext &ec, unsigned int numRuns) { // TODO add opeartor!=
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - Cluster - Equal ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-//        ec.DESC("check operator== is not a dummy");
-//
-//        {
-//            // The requirements don't provide for many other methods that
-//            // can be used for testing, so operator== is checked first
-//            Cluster c1(100), c2(100);
-//            c1.add(Point(100));
-//
-//            pass = !(c1 == c2);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("check inequality");
-//
-//        {
-//            // The requirements don't provide for many other methods that
-//            // can be used for testing, so operator== is checked first
-//            Cluster c1(100), c2(100);
-//            c1.add(Point(100));
-//
-//            pass = (c1 != c2);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("operator!=: DimensionalityMismatchEx");
-//
-//        {
-//            Cluster c1(100), c2(120);
-//            c1.add(Point(100));
-//
-//            pass = true;
-//            try {
-//                pass = (c1 != c2);
-//                pass = false;
-//            } catch (DimensionalityMismatchEx &ex) {
-//                std::cerr << "Caught exception: " << ex << std::endl;
-//                pass = (ex.getName() == "DimensionalityMismatchEx");
-//            }
-//
-//            ec.result(pass);
-//        }
-//    }
-//}
-//
-//// ascending pseudo-lexicographic order
-//void test_cluster_order(ErrorContext &ec, unsigned int numRuns) {
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - Cluster - Order ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-//        ec.DESC("points in a cluster are sorted");
-//
-//        {
-//            Point p1(5), p2(5), p3(5), p4(5), p5(5);
-//            p1[0] = 1;
-//            p2[1] = 1;
-//            p3[2] = 1;
-//            p4[3] = 1;
-//            p5[4] = 1;
-//
-//            Cluster c(5);
-//            c.add(p1);
-//            c.add(p2);
-//            c.add(p4);
-//            c.add(p3);
-//            c.add(p5);
-//
-//            pass = (c[0] == p5)
-//                   && (c[1] == p4)
-//                   && (c[2] == p3)
-//                   && (c[3] == p2)
-//                   && (c[4] == p1);
-//
-//            if (!pass) {
-//                std::cout << std::endl;
-//                std::cout << c << std::endl;
-//                std::cout << std::endl;
-//            }
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("ascending pseudo-lexicographic order");
-//
-//        {
-//            Point p1(5), p2(5), p3(5), p4(5), p5(5);
-//            p1[0] = 1;
-//            p2[1] = 1;
-//            p3[2] = -1;
-//            p4[3] = 1;
-//            p5[4] = -1;
-//
-//            Cluster c(5);
-//            c.add(p1);
-//            c.add(p2);
-//            c.add(p4);
-//            c.add(p3);
-//            c.add(p5);
-//
-//            pass = (c[0] == p3)
-//                   && (c[1] == p5)
-//                   && (c[2] == p4)
-//                   && (c[3] == p2)
-//                   && (c[4] == p1);
-//
-//            if (!pass) {
-//                std::cout << std::endl;
-//                std::cout << c << std::endl;
-//                std::cout << std::endl;
-//            }
-//
-//            ec.result(pass);
-//        }
-//    }
-//}
-//
-//// operator+=, operator-=, different rhs
-//void test_cluster_CAO(ErrorContext &ec, unsigned int numRuns) {
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - Cluster - Compound arithmetic ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-//        ec.DESC("plus equals (Cluster and Point) check with non-equality");
-//
-//        {
-//            Cluster c1(50), c2(50);
-//            Point p1(50);
-//
-//            for (int i = 0; i < 50; i++)
-//                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
-//
-//            c1 += p1;
-//
-//            pass = !(c1 == c2);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("plus equals (Cluster and Point) check with size getter");
-//
-//        {
-//            Cluster c1(50);
-//            Point p1(50);
-//
-//            for (int i = 0; i < 50; i++)
-//                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
-//
-//            c1 += p1;
-//
-//            pass = (c1.getSize() == 1);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("plus equals point: DimensionalityMismatchEx");
-//
-//        {
-//            Cluster c1(50);
-//            Point p1(60);
-//
-//            for (int i = 0; i < 60; i++)
-//                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
-//
-//            pass = true;
-//            try {
-//                c1 += p1;
-//                pass = false;
-//            } catch (DimensionalityMismatchEx &ex) {
-//                std::cerr << "Caught exception: " << ex << std::endl;
-//                pass = (ex.getName() == "DimensionalityMismatchEx");
-//            }
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("minus equals (Cluster and Point) check with non-equality");
-//
-//        {
-//            Cluster c1(50), c2(50);
-//            Point p1(50);
-//
-//            for (int i = 0; i < 50; i++)
-//                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
-//
-//            c1 += p1;
-//            pass = !(c1 == c2);
-//
-//            c1 -= p1;
-//            pass = (c1 == c2);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("minus equals (Cluster and Point) check with size getter");
-//
-//        {
-//            Cluster c1(50);
-//            Point p1(50);
-//
-//            for (int i = 0; i < 50; i++)
-//                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
-//
-//            c1 += p1;
-//            pass = (c1.getSize() == 1);
-//
-//            c1 -= p1;
-//            pass = (c1.getSize() == 0);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("minus equals point: DimensionalityMismatchEx");
-//
-//        {
-//            Cluster c1(50);
-//            Point p1(60);
-//
-//            for (int i = 0; i < 60; i++)
-//                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
-//
-//            pass = true;
-//            try {
-//                c1 -= p1;
-//                pass = false;
-//            } catch (DimensionalityMismatchEx &ex) {
-//                std::cerr << "Caught exception: " << ex << std::endl;
-//                pass = (ex.getName() == "DimensionalityMismatchEx");
-//            }
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("plus equals (Cluster union) no common points");
-//
-//        {
-//            Cluster c1(50), c2(50), c3(50);
-//            Point   p1(50),
-//                    p2(50),
-//                    p3(50),
-//                    p4(50),
-//                    p5(50);
-//            c1.add(p1); c1.add(p2); c1.add(p3);
-//            c2.add(p4); c2.add(p5);
-//
-//            // create a union to compare to
-//            c3.add(p1); c3.add(p2); c3.add(p3);
-//            c3.add(p4); c3.add(p5);
-//
-//            c1 += c2;
-//
-//            pass = (c1 == c3);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("plus equals (Cluster union) one common point");
-//
-//        {
-//            Cluster c1(50), c2(50), c3(50);
-//            Point   p1(50),
-//                    p2(50),
-//                    p3(50),
-//                    p4(50),
-//                    p5(50);
-//            c1.add(p1); c1.add(p2); c1.add(p3);
-//            c2.add(p3); c2.add(p4); c2.add(p5);
-//
-//            // create a union to compare to
-//            c3.add(p1); c3.add(p2); c3.add(p3);
-//            c3.add(p4); c3.add(p5);
-//
-//            c1 += c2;
-//
-//            pass = (c1 == c3);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("plus equals (Cluster union) two equal clusters");
-//
-//        {
-//            Cluster c1(50), c2(50);
-//            Point   p1(50),
-//                    p2(50),
-//                    p3(50),
-//                    p4(50),
-//                    p5(50);
-//            c1.add(p1); c1.add(p2); c1.add(p3); c1.add(p4); c1.add(p5);
-//            c2.add(p1); c2.add(p2); c2.add(p3); c2.add(p4); c2.add(p5);
-//
-//            c1 += c2;
-//
-//            pass = (c1 == c2);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("plus equals cluster: DimensionalityMismatchEx");
-//
-//        {
-//            Cluster c1(50);
-//            Point p1(50);
-//
-//            for (int i = 0; i < 50; i++)
-//                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
-//            c1 += p1;
-//
-//            Cluster c2(25);
-//            Point p2(25);
-//
-//            for (int i = 0; i < 25; i++)
-//                p2[i] = 6.75 * i * i + 5.45 * i + 1.15;
-//            c2 += p2;
-//
-//            pass = true;
-//            try {
-//                c1 += c2;
-//                pass = false;
-//            } catch (DimensionalityMismatchEx &ex) {
-//                std::cerr << "Caught exception: " << ex << std::endl;
-//                pass = (ex.getName() == "DimensionalityMismatchEx");
-//            }
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("minus equals (asymmetric Cluster difference) no common points");
-//
-//        {
-//            Cluster c1(50), c2(50), c3(50);
-//            Point   p1(50),
-//                    p2(50),
-//                    p3(50),
-//                    p4(50),
-//                    p5(50);
-//            c1.add(p1); c1.add(p2); c1.add(p3);
-//            c2.add(p4); c2.add(p5);
-//
-//            c3 = c1;
-//            c1 -= c2;
-//
-//            pass = (c1 == c3);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("minus equals (asymmetric Cluster difference) one common point");
-//
-//        {
-//            Cluster c1(50), c2(50), c3(50);
-//            Point   p1(50),
-//                    p2(50),
-//                    p3(50),
-//                    p4(50),
-//                    p5(50);
-//            c1.add(p1); c1.add(p2); c1.add(p3);
-//            c2.add(p3); c2.add(p4); c2.add(p5);
-//
-//            // Prepare a difference to compare to
-//            c3.add(p1); c3.add(p2);
-//            c1 -= c2;
-//
-//            pass = (c1 == c3);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("minus equals (asymmetric Cluster difference) two equal clusters");
-//
-//        {
-//            Cluster c1(50), c2(50), c3(50);
-//            Point   p1(50),
-//                    p2(50),
-//                    p3(50),
-//                    p4(50),
-//                    p5(50);
-//            c1.add(p1); c1.add(p2); c1.add(p3); c1.add(p4); c1.add(p5);
-//            c2.add(p1); c2.add(p2); c2.add(p3); c2.add(p4); c2.add(p5);
-//
-//            c1 -= c2;
-//
-//            pass = (c1 == c3); // c1 should be empty
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("minus equals cluster: DimensionalityMismatchEx");
-//
-//        {
-//            Cluster c1(50);
-//            Point p1(50);
-//
-//            for (int i = 0; i < 50; i++)
-//                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
-//            c1 += p1;
-//
-//            Cluster c2(25);
-//            Point p2(25);
-//
-//            for (int i = 0; i < 25; i++)
-//                p2[i] = 6.75 * i * i + 5.45 * i + 1.15;
-//            c2 += p2;
-//
-//            pass = true;
-//            try {
-//                c1 -= c2;
-//                pass = false;
-//            } catch (DimensionalityMismatchEx &ex) {
-//                std::cerr << "Caught exception: " << ex << std::endl;
-//                pass = (ex.getName() == "DimensionalityMismatchEx");
-//            }
-//
-//            ec.result(pass);
-//        }
-//
-//    }
-//}
-//
-//// operator+, operator-, different rhs
-//void test_cluster_SAO(ErrorContext &ec, unsigned int numRuns) {
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - Cluster - Simple arithmetic ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-//        ec.DESC("plus (Cluster and Point)");
-//
-//        {
-//            Cluster c1(50), c2(50);
-//            Point   p1(50),
-//                    p2(50),
-//                    p3(50),
-//                    p4(50);
-//            c1.add(p1); c1.add(p2); c1.add(p3);
-//
-//            c2 = c1; c2.add(p4);
-//            Cluster c3 = c1 + p4;
-//
-//            pass = (c3 == c2);
-//
-//            ec.result(pass);
-//
-//        }
-//
-//        ec.DESC("plus point: DimensionalityMismatchEx");
-//
-//        {
-//            Cluster c1(50);
-//            Point p1(60);
-//
-//            for (int i = 0; i < 60; i++)
-//                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
-//
-//            pass = true;
-//            try {
-//                Cluster c2 = c1 + p1;
-//                pass = false;
-//            } catch (DimensionalityMismatchEx &ex) {
-//                std::cerr << "Caught exception: " << ex << std::endl;
-//                pass = (ex.getName() == "DimensionalityMismatchEx");
-//            }
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("minus (Cluster and Point)");
-//
-//        {
-//            Cluster c1(50), c2(50);
-//            Point   p1(50),
-//                    p2(50),
-//                    p3(50),
-//                    p4(50);
-//            c1.add(p1); c1.add(p2); c1.add(p3); c1.add(p4);
-//
-//            c2 = c1; c2.remove(p4);
-//            Cluster c3 = c1 - p4;
-//
-//            pass = (c3 == c2);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("plus point: DimensionalityMismatchEx");
-//
-//        {
-//            Cluster c1(50);
-//            Point p1(60);
-//
-//            for (int i = 0; i < 60; i++)
-//                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
-//
-//            pass = true;
-//            try {
-//                Cluster c2 = c1 - p1;
-//                pass = false;
-//            } catch (DimensionalityMismatchEx &ex) {
-//                std::cerr << "Caught exception: " << ex << std::endl;
-//                pass = (ex.getName() == "DimensionalityMismatchEx");
-//            }
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("plus (Cluster union)");
-//
-//        {
-//            Cluster c1(50), c2(50);
-//            Point   p1(50),
-//                    p2(50),
-//                    p3(50),
-//                    p4(50),
-//                    p5(50);
-//            c1.add(p1); c1.add(p2); c1.add(p3);
-//            c2.add(p4); c2.add(p5);
-//
-//            Cluster c3(50);
-//            c3.add(p1); c3.add(p2); c3.add(p3); c3.add(p4); c3.add(p5);
-//
-//            Cluster c4 = c1 + c2;
-//
-//            pass = (c4 == c3);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("plus equals cluster: DimensionalityMismatchEx");
-//
-//        {
-//            Cluster c1(50);
-//            Point p1(50);
-//
-//            for (int i = 0; i < 50; i++)
-//                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
-//            c1 += p1;
-//
-//            Cluster c2(25);
-//            Point p2(25);
-//
-//            for (int i = 0; i < 25; i++)
-//                p2[i] = 6.75 * i * i + 5.45 * i + 1.15;
-//            c2 += p2;
-//
-//            pass = true;
-//            try {
-//                Cluster c3 = c1 + c2;
-//                pass = false;
-//            } catch (DimensionalityMismatchEx &ex) {
-//                std::cerr << "Caught exception: " << ex << std::endl;
-//                pass = (ex.getName() == "DimensionalityMismatchEx");
-//            }
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("minus (Cluster difference)");
-//
-//        {
-//            Cluster c1(50), c2(50);
-//            Point   p1(50),
-//                    p2(50),
-//                    p3(50),
-//                    p4(50),
-//                    p5(50);
-//            c1.add(p1); c1.add(p2); c1.add(p3);
-//            c2.add(p3); c2.add(p4); c2.add(p5);
-//
-//            Cluster c3(50);
-//            c3.add(p1); c3.add(p2);
-//
-//            Cluster c4 = c1 - c2;
-//
-//            pass = (c4 == c3);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("plus equals cluster: DimensionalityMismatchEx");
-//
-//        {
-//            Cluster c1(50);
-//            Point p1(50);
-//
-//            for (int i = 0; i < 50; i++)
-//                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
-//            c1 += p1;
-//
-//            Cluster c2(25);
-//            Point p2(25);
-//
-//            for (int i = 0; i < 25; i++)
-//                p2[i] = 6.75 * i * i + 5.45 * i + 1.15;
-//            c2 += p2;
-//
-//            pass = true;
-//            try {
-//                Cluster c3 = c1 - c2;
-//                pass = false;
-//            } catch (DimensionalityMismatchEx &ex) {
-//                std::cerr << "Caught exception: " << ex << std::endl;
-//                pass = (ex.getName() == "DimensionalityMismatchEx");
-//            }
-//
-//            ec.result(pass);
-//        }
-//    }
-//}
+void test_cluster_smoketest(ErrorContext &ec) {
+    bool pass;
+
+    ec.DESC("--- Test - Cluster - Smoketest ---");
+
+    ec.DESC("constructor, destructor");
+    pass = true;
+    for (int i = 0; i < 10; i ++) {
+
+        Cluster c(30);
+    }
+    ec.result(pass);
+
+
+    ec.DESC("size getter - implement if you haven't");
+    pass = true;
+    for (int i = 0; i < 10; i ++) {
+
+        // Construct a Point
+        // At the end of the block, destructor will be called
+        Cluster c(30);
+
+        pass = (c.getSize() == 0);
+        if (!pass) break;
+    }
+    ec.result(pass);
+
+
+    ec.DESC("copy constructor");
+    pass = true;
+    for (int i = 0; i < 10; i ++) {
+
+        Cluster c1(30), c2(c1);
+
+        pass = (c1 == c2);
+        if (!pass) break;
+    }
+    ec.result(pass);
+
+    ec.DESC("zero dimensions");
+    pass = true;
+    for (int i = 0; i < 10; i ++) {
+
+        // Construct a Cluster
+        // At the end of the block, destructor will be called
+        try {
+            Cluster c1(0);
+            pass = false;
+        } catch (ZeroDimensionsEx &ex) {
+            std::cerr << "Caught exception: " << ex << std::endl;
+            pass = (ex.getName() == "ZeroDimensionsEx");
+        }
+
+        if (!pass) break;
+    }
+    ec.result(pass);
+
+}
+//
+// add, remove, operator[]
+void test_cluster_addremove(ErrorContext &ec, unsigned int numRuns) { // TODO add operator[]
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - Cluster - Add/remove points ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("add and check with size getter");
+
+        {
+            Cluster c1(50);
+            c1.add(Point(50));
+            c1.add(Point(50));
+            c1.add(Point(50));
+
+            pass = (c1.getSize() == 3);
+
+            ec.result(pass);
+        } // by default, points will get released here
+
+
+        ec.DESC("add, remove, and check with size getter");
+
+        {
+            Point   p1(10),
+                    p2(10),
+                    p3(10);
+            Cluster c1(10);
+            c1.add(p1); c1.add(p2); c1.add(p3);
+            c1.remove(p1); c1.remove(p2); c1.remove(p3);
+
+            pass = (c1.getSize() == 0);
+
+            ec.result(pass);
+        } // by default, points will get released here
+
+        ec.DESC("add, check with cluster equality, remove");
+
+        {
+            Point   p1(10),
+                    p2(10),
+                    p3(10);
+
+            Cluster c1(10), c2(10);
+            c1.add(p1); c1.add(p2); c1.add(p3);
+            c2.add(p1); c2.add(p2); c2.add(p3);
+
+            pass = (c1 == c2);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("check point after add and remove");
+
+        {
+            Point   p1(10);
+
+            for (int i = 0; i < 10; i++)
+                p1[i] = 5.4 * i * i + 3.4 * i + 1.6;
+
+            Cluster c1(10);
+            c1.add(p1);
+            Point p2 = c1.remove(p1);
+
+            pass = (p1 == p2);
+
+            ec.result(pass);
+        }
+    }
+}
+//
+// Containment
+void test_cluster_contain(ErrorContext &ec, unsigned int numRuns) {
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - Cluster - Containment ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("cluster with one point");
+
+        {
+            Point p(10);
+            p[0] = p[2] = p[4] = p[8] = 6.705;
+            Cluster c(10);
+            c.add(p);
+
+            pass = c.contains(p);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("contain: DimensionalityMismatchEx");
+
+        {
+            Point p(10);
+            p[0] = p[2] = p[4] = p[8] = 6.705;
+            Cluster c(10);
+            c.add(p);
+
+            Point p1(12);
+
+            pass = true;
+            try {
+                pass = c.contains(p1);
+                pass = false;
+            } catch (DimensionalityMismatchEx &ex) {
+                std::cerr << "Caught exception: " << ex << std::endl;
+                pass = (ex.getName() == "DimensionalityMismatchEx");
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("cluster with several points");
+
+        {
+            Point p(10);
+            p[0] = p[2] = p[4] = p[8] = 6.705;
+            Cluster c(10);
+
+            for (int i = 0; i < 10; i ++) {
+                Point pp(10);
+                for (int j = 0; j < 10; j ++) {
+                    pp[i] = 3.4 + i * 2.1 + i * i;
+                }
+                c.add(pp);
+            }
+            c.add(p);
+
+            pass = c.contains(p);
+
+            ec.result(pass);
+        }
+    }
+}
+
+// Inner class Move
+void test_cluster_move(ErrorContext &ec, unsigned int numRuns) {
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - Cluster - Move ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("move 1 point across");
+
+        {
+            Cluster c1(100), c2(100);
+            Point p(100);
+            c1.add(p);
+
+            pass = c1.contains(p);
+
+            Cluster::Move move(p, c1, c2);
+            move.perform();
+
+            pass = pass && (! c1.contains(p)) && c2.contains(p);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("move 1 point back and forth");
+
+        {
+            Cluster c1(100), c2(100);
+            Point p(100);
+            c1.add(p);
+
+            pass = c1.contains(p);
+
+            Cluster::Move move1(p, c1, c2);
+            move1.perform();
+
+            pass = pass && (! c1.contains(p)) && c2.contains(p);
+
+            Cluster::Move move2(p, c2, c1);
+            move2.perform();
+
+            pass = pass && c1.contains(p) && (! c2.contains(p));
+
+            ec.result(pass);
+        }
+    }
+}
+//
+// Copy constructor
+void test_cluster_copying(ErrorContext &ec, unsigned int numRuns) {
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - Cluster - Copy ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("simple copy");
+
+        {
+            Point   p1(10),
+                    p2(10),
+                    p3(10);
+            Cluster c1(10);
+            c1.add(p1); c1.add(p2); c1.add(p3);
+            Cluster c2(c1);
+
+            pass = (c1 == c2);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("chained copy");
+
+        {
+            Point   p1(10),
+                    p2(10),
+                    p3(10);
+            Cluster c1(10);
+            c1.add(p1); c1.add(p2); c1.add(p3);
+            Cluster c2(c1), c3(c2), c4(c3);
+
+            pass = (c1 == c4);
+
+            ec.result(pass);
+        }
+    }
+}
+//
+// operator=
+void test_cluster_assignment(ErrorContext &ec, unsigned int numRuns) {
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - Cluster - Assign ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("simple assignment");
+
+        {
+            Point   p1(10),
+                    p2(10),
+                    p3(10);
+
+            Cluster c1(10);
+            c1.add(p1); c1.add(p2); c1.add(p3);
+            Cluster c2 = c1;
+
+            pass = (c1 == c2);
+
+            ec.result(pass);
+        }
+
+
+        ec.DESC("assignment: DimensionalityMismatchEx");
+
+        {
+            Point   p1(10),
+                    p2(10),
+                    p3(10);
+
+            Cluster c1(10);
+            c1.add(p1); c1.add(p2); c1.add(p3);
+
+            Cluster c2(15);
+
+            pass = true;
+            try {
+                c2 = c1;
+                pass = false;
+            } catch (DimensionalityMismatchEx &ex) {
+                std::cerr << "Caught exception: " << ex << std::endl;
+                pass = (ex.getName() == "DimensionalityMismatchEx");
+            }
+
+            ec.result(pass);
+        }
+
+
+        ec.DESC("assignment causing deletion");
+
+        {
+            Point   p1(10),
+                    p2(10),
+                    p3(10);
+
+            Cluster c1(10);
+            c1.add(p1); c1.add(p2); c1.add(p3);
+            Cluster c2(10);
+            // add some other points
+            c2.add(Point(10));
+            c2.add(Point(10));
+            c2.add(Point(10));
+
+            c2 = c1;
+
+            pass = (c1 == c2);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("chained assignment");
+
+        {
+            Point   p1(10),
+                    p2(10),
+                    p3(10);
+
+            Cluster c1(10);
+            c1.add(p1); c1.add(p2); c1.add(p3);
+            Cluster c2 = c1;
+            Cluster c3 = c2;
+            Cluster c4 = c3;
+
+            pass = (c1 == c4);
+
+            ec.result(pass);
+        }
+    }
+}
+//
+// subscript (operator[])
+void test_cluster_subscript(ErrorContext &ec, unsigned int numRuns) {
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - Cluster - Subscript ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("cluster with one point");
+
+        {
+            Cluster c(10);
+            Point p(10);
+            p[5] = 3.14;
+
+            c.add(p);
+            Point p1 = c[0];
+
+            pass = p1[5] == 3.14;
+
+            ec.result(pass);
+        }
+
+        ec.DESC("cluster with several points");
+
+        {
+            Cluster c(10);
+            for (int i = 0; i < 10; i ++) {
+                Point p(10);
+                p[5] = 3.14;
+                c.add(p);
+            }
+
+            pass = true;
+            for (int i = 0; i < 10; i ++) {
+                Point p1 = c[i];
+                pass = pass && (p1[5] == 3.14);
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("const operator[]");
+
+        {
+            Cluster c(100);
+            for (int i = 0; i < 200; i++)
+                c.add(Point(100));
+
+            pass = (c.getSize() == 200);
+
+            for (int i = 0; i < 200; i++) {
+                Point tempPt = c[i];
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("check no non-const operator[] (compile time)");
+
+        {
+            Cluster c(100);
+            for (int i = 0; i < 200; i++)
+                c.add(Point(100));
+
+            pass = true;
+
+            for (int i = 0; i < 200; i++) {
+//                c[i] = Point(100); // c[i] read-only and not assignable
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("operator[]: OutOfBoundsEx");
+
+        {
+            Cluster c(100);
+            for (int i = 0; i < 200; i++)
+                c.add(Point(100));
+
+            pass = true;
+
+            try {
+                for (int i = 0; i < 201; i++) {
+                    Point p = c[i];
+                }
+                pass = false;
+            } catch (OutOfBoundsEx &ex) {
+                std::cerr << "Caught exception: " << ex << std::endl;
+                pass = pass && (ex.getName() == "OutOfBoundsEx");
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("operator[]: EmptyClusterEx");
+
+        {
+            Cluster c(100);
+
+            pass = true;
+
+            try {
+                for (int i = 0; i < 10; i++) {
+                    Point p = c[i];
+                }
+                pass = false;
+            } catch (EmptyClusterEx &ex) {
+                std::cerr << "Caught exception: " << ex << std::endl;
+                pass = pass && (ex.getName() == "EmptyClusterEx");
+            }
+
+            ec.result(pass);
+        }
+    }
+}
+//
+// operator==, operator!=
+void test_cluster_equality(ErrorContext &ec, unsigned int numRuns) { // TODO add opeartor!=
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - Cluster - Equal ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("check operator== is not a dummy");
+
+        {
+            // The requirements don't provide for many other methods that
+            // can be used for testing, so operator== is checked first
+            Cluster c1(100), c2(100);
+            c1.add(Point(100));
+
+            pass = !(c1 == c2);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("check inequality");
+
+        {
+            // The requirements don't provide for many other methods that
+            // can be used for testing, so operator== is checked first
+            Cluster c1(100), c2(100);
+            c1.add(Point(100));
+
+            pass = (c1 != c2);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("operator!=: DimensionalityMismatchEx");
+
+        {
+            Cluster c1(100), c2(120);
+            c1.add(Point(100));
+
+            pass = true;
+            try {
+                pass = (c1 != c2);
+                pass = false;
+            } catch (DimensionalityMismatchEx &ex) {
+                std::cerr << "Caught exception: " << ex << std::endl;
+                pass = (ex.getName() == "DimensionalityMismatchEx");
+            }
+
+            ec.result(pass);
+        }
+    }
+}
+//
+// ascending pseudo-lexicographic order
+void test_cluster_order(ErrorContext &ec, unsigned int numRuns) {
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - Cluster - Order ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("points in a cluster are sorted");
+
+        {
+            Point p1(5), p2(5), p3(5), p4(5), p5(5);
+            p1[0] = 1;
+            p2[1] = 1;
+            p3[2] = 1;
+            p4[3] = 1;
+            p5[4] = 1;
+
+            Cluster c(5);
+            c.add(p1);
+            c.add(p2);
+            c.add(p4);
+            c.add(p3);
+            c.add(p5);
+
+            pass = (c[0] == p5)
+                   && (c[1] == p4)
+                   && (c[2] == p3)
+                   && (c[3] == p2)
+                   && (c[4] == p1);
+
+            if (!pass) {
+                std::cout << std::endl;
+                std::cout << c << std::endl;
+                std::cout << std::endl;
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("ascending pseudo-lexicographic order");
+
+        {
+            Point p1(5), p2(5), p3(5), p4(5), p5(5);
+            p1[0] = 1;
+            p2[1] = 1;
+            p3[2] = -1;
+            p4[3] = 1;
+            p5[4] = -1;
+
+            Cluster c(5);
+            c.add(p1);
+            c.add(p2);
+            c.add(p4);
+            c.add(p3);
+            c.add(p5);
+
+            pass = (c[0] == p3)
+                   && (c[1] == p5)
+                   && (c[2] == p4)
+                   && (c[3] == p2)
+                   && (c[4] == p1);
+
+            if (!pass) {
+                std::cout << std::endl;
+                std::cout << c << std::endl;
+                std::cout << std::endl;
+            }
+
+            ec.result(pass);
+        }
+    }
+}
+//
+// operator+=, operator-=, different rhs
+void test_cluster_CAO(ErrorContext &ec, unsigned int numRuns) {
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - Cluster - Compound arithmetic ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("plus equals (Cluster and Point) check with non-equality");
+
+        {
+            Cluster c1(50), c2(50);
+            Point p1(50);
+
+            for (int i = 0; i < 50; i++)
+                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
+
+            c1 += p1;
+
+            pass = !(c1 == c2);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("plus equals (Cluster and Point) check with size getter");
+
+        {
+            Cluster c1(50);
+            Point p1(50);
+
+            for (int i = 0; i < 50; i++)
+                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
+
+            c1 += p1;
+
+            pass = (c1.getSize() == 1);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("plus equals point: DimensionalityMismatchEx");
+
+        {
+            Cluster c1(50);
+            Point p1(60);
+
+            for (int i = 0; i < 60; i++)
+                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
+
+            pass = true;
+            try {
+                c1 += p1;
+                pass = false;
+            } catch (DimensionalityMismatchEx &ex) {
+                std::cerr << "Caught exception: " << ex << std::endl;
+                pass = (ex.getName() == "DimensionalityMismatchEx");
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("minus equals (Cluster and Point) check with non-equality");
+
+        {
+            Cluster c1(50), c2(50);
+            Point p1(50);
+
+            for (int i = 0; i < 50; i++)
+                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
+
+            c1 += p1;
+            pass = !(c1 == c2);
+
+            c1 -= p1;
+            pass = (c1 == c2);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("minus equals (Cluster and Point) check with size getter");
+
+        {
+            Cluster c1(50);
+            Point p1(50);
+
+            for (int i = 0; i < 50; i++)
+                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
+
+            c1 += p1;
+            pass = (c1.getSize() == 1);
+
+            c1 -= p1;
+            pass = (c1.getSize() == 0);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("minus equals point: DimensionalityMismatchEx");
+
+        {
+            Cluster c1(50);
+            Point p1(60);
+
+            for (int i = 0; i < 60; i++)
+                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
+
+            pass = true;
+            try {
+                c1 -= p1;
+                pass = false;
+            } catch (DimensionalityMismatchEx &ex) {
+                std::cerr << "Caught exception: " << ex << std::endl;
+                pass = (ex.getName() == "DimensionalityMismatchEx");
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("plus equals (Cluster union) no common points");
+
+        {
+            Cluster c1(50), c2(50), c3(50);
+            Point   p1(50),
+                    p2(50),
+                    p3(50),
+                    p4(50),
+                    p5(50);
+            c1.add(p1); c1.add(p2); c1.add(p3);
+            c2.add(p4); c2.add(p5);
+
+            // create a union to compare to
+            c3.add(p1); c3.add(p2); c3.add(p3);
+            c3.add(p4); c3.add(p5);
+
+            c1 += c2;
+
+            pass = (c1 == c3);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("plus equals (Cluster union) one common point");
+
+        {
+            Cluster c1(50), c2(50), c3(50);
+            Point   p1(50),
+                    p2(50),
+                    p3(50),
+                    p4(50),
+                    p5(50);
+            c1.add(p1); c1.add(p2); c1.add(p3);
+            c2.add(p3); c2.add(p4); c2.add(p5);
+
+            // create a union to compare to
+            c3.add(p1); c3.add(p2); c3.add(p3);
+            c3.add(p4); c3.add(p5);
+
+            c1 += c2;
+
+            pass = (c1 == c3);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("plus equals (Cluster union) two equal clusters");
+
+        {
+            Cluster c1(50), c2(50);
+            Point   p1(50),
+                    p2(50),
+                    p3(50),
+                    p4(50),
+                    p5(50);
+            c1.add(p1); c1.add(p2); c1.add(p3); c1.add(p4); c1.add(p5);
+            c2.add(p1); c2.add(p2); c2.add(p3); c2.add(p4); c2.add(p5);
+
+            c1 += c2;
+
+            pass = (c1 == c2);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("plus equals cluster: DimensionalityMismatchEx");
+
+        {
+            Cluster c1(50);
+            Point p1(50);
+
+            for (int i = 0; i < 50; i++)
+                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
+            c1 += p1;
+
+            Cluster c2(25);
+            Point p2(25);
+
+            for (int i = 0; i < 25; i++)
+                p2[i] = 6.75 * i * i + 5.45 * i + 1.15;
+            c2 += p2;
+
+            pass = true;
+            try {
+                c1 += c2;
+                pass = false;
+            } catch (DimensionalityMismatchEx &ex) {
+                std::cerr << "Caught exception: " << ex << std::endl;
+                pass = (ex.getName() == "DimensionalityMismatchEx");
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("minus equals (asymmetric Cluster difference) no common points");
+
+        {
+            Cluster c1(50), c2(50), c3(50);
+            Point   p1(50),
+                    p2(50),
+                    p3(50),
+                    p4(50),
+                    p5(50);
+            c1.add(p1); c1.add(p2); c1.add(p3);
+            c2.add(p4); c2.add(p5);
+
+            c3 = c1;
+            c1 -= c2;
+
+            pass = (c1 == c3);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("minus equals (asymmetric Cluster difference) one common point");
+
+        {
+            Cluster c1(50), c2(50), c3(50);
+            Point   p1(50),
+                    p2(50),
+                    p3(50),
+                    p4(50),
+                    p5(50);
+            c1.add(p1); c1.add(p2); c1.add(p3);
+            c2.add(p3); c2.add(p4); c2.add(p5);
+
+            // Prepare a difference to compare to
+            c3.add(p1); c3.add(p2);
+            c1 -= c2;
+
+            pass = (c1 == c3);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("minus equals (asymmetric Cluster difference) two equal clusters");
+
+        {
+            Cluster c1(50), c2(50), c3(50);
+            Point   p1(50),
+                    p2(50),
+                    p3(50),
+                    p4(50),
+                    p5(50);
+            c1.add(p1); c1.add(p2); c1.add(p3); c1.add(p4); c1.add(p5);
+            c2.add(p1); c2.add(p2); c2.add(p3); c2.add(p4); c2.add(p5);
+
+            c1 -= c2;
+
+            pass = (c1 == c3); // c1 should be empty
+
+            ec.result(pass);
+        }
+
+        ec.DESC("minus equals cluster: DimensionalityMismatchEx");
+
+        {
+            Cluster c1(50);
+            Point p1(50);
+
+            for (int i = 0; i < 50; i++)
+                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
+            c1 += p1;
+
+            Cluster c2(25);
+            Point p2(25);
+
+            for (int i = 0; i < 25; i++)
+                p2[i] = 6.75 * i * i + 5.45 * i + 1.15;
+            c2 += p2;
+
+            pass = true;
+            try {
+                c1 -= c2;
+                pass = false;
+            } catch (DimensionalityMismatchEx &ex) {
+                std::cerr << "Caught exception: " << ex << std::endl;
+                pass = (ex.getName() == "DimensionalityMismatchEx");
+            }
+
+            ec.result(pass);
+        }
+
+    }
+}
+//
+// operator+, operator-, different rhs
+void test_cluster_SAO(ErrorContext &ec, unsigned int numRuns) {
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - Cluster - Simple arithmetic ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("plus (Cluster and Point)");
+
+        {
+            Cluster c1(50), c2(50);
+            Point   p1(50),
+                    p2(50),
+                    p3(50),
+                    p4(50);
+            c1.add(p1); c1.add(p2); c1.add(p3);
+
+            c2 = c1; c2.add(p4);
+            Cluster c3 = c1 + p4;
+
+            pass = (c3 == c2);
+
+            ec.result(pass);
+
+        }
+
+        ec.DESC("plus point: DimensionalityMismatchEx");
+
+        {
+            Cluster c1(50);
+            Point p1(60);
+
+            for (int i = 0; i < 60; i++)
+                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
+
+            pass = true;
+            try {
+                Cluster c2 = c1 + p1;
+                pass = false;
+            } catch (DimensionalityMismatchEx &ex) {
+                std::cerr << "Caught exception: " << ex << std::endl;
+                pass = (ex.getName() == "DimensionalityMismatchEx");
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("minus (Cluster and Point)");
+
+        {
+            Cluster c1(50), c2(50);
+            Point   p1(50),
+                    p2(50),
+                    p3(50),
+                    p4(50);
+            c1.add(p1); c1.add(p2); c1.add(p3); c1.add(p4);
+
+            c2 = c1; c2.remove(p4);
+            Cluster c3 = c1 - p4;
+
+            pass = (c3 == c2);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("plus point: DimensionalityMismatchEx");
+
+        {
+            Cluster c1(50);
+            Point p1(60);
+
+            for (int i = 0; i < 60; i++)
+                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
+
+            pass = true;
+            try {
+                Cluster c2 = c1 - p1;
+                pass = false;
+            } catch (DimensionalityMismatchEx &ex) {
+                std::cerr << "Caught exception: " << ex << std::endl;
+                pass = (ex.getName() == "DimensionalityMismatchEx");
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("plus (Cluster union)");
+
+        {
+            Cluster c1(50), c2(50);
+            Point   p1(50),
+                    p2(50),
+                    p3(50),
+                    p4(50),
+                    p5(50);
+            c1.add(p1); c1.add(p2); c1.add(p3);
+            c2.add(p4); c2.add(p5);
+
+            Cluster c3(50);
+            c3.add(p1); c3.add(p2); c3.add(p3); c3.add(p4); c3.add(p5);
+
+            Cluster c4 = c1 + c2;
+
+            pass = (c4 == c3);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("plus equals cluster: DimensionalityMismatchEx");
+
+        {
+            Cluster c1(50);
+            Point p1(50);
+
+            for (int i = 0; i < 50; i++)
+                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
+            c1 += p1;
+
+            Cluster c2(25);
+            Point p2(25);
+
+            for (int i = 0; i < 25; i++)
+                p2[i] = 6.75 * i * i + 5.45 * i + 1.15;
+            c2 += p2;
+
+            pass = true;
+            try {
+                Cluster c3 = c1 + c2;
+                pass = false;
+            } catch (DimensionalityMismatchEx &ex) {
+                std::cerr << "Caught exception: " << ex << std::endl;
+                pass = (ex.getName() == "DimensionalityMismatchEx");
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("minus (Cluster difference)");
+
+        {
+            Cluster c1(50), c2(50);
+            Point   p1(50),
+                    p2(50),
+                    p3(50),
+                    p4(50),
+                    p5(50);
+            c1.add(p1); c1.add(p2); c1.add(p3);
+            c2.add(p3); c2.add(p4); c2.add(p5);
+
+            Cluster c3(50);
+            c3.add(p1); c3.add(p2);
+
+            Cluster c4 = c1 - c2;
+
+            pass = (c4 == c3);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("plus equals cluster: DimensionalityMismatchEx");
+
+        {
+            Cluster c1(50);
+            Point p1(50);
+
+            for (int i = 0; i < 50; i++)
+                p1[i] = 6.75 * i * i + 5.45 * i + 1.15;
+            c1 += p1;
+
+            Cluster c2(25);
+            Point p2(25);
+
+            for (int i = 0; i < 25; i++)
+                p2[i] = 6.75 * i * i + 5.45 * i + 1.15;
+            c2 += p2;
+
+            pass = true;
+            try {
+                Cluster c3 = c1 - c2;
+                pass = false;
+            } catch (DimensionalityMismatchEx &ex) {
+                std::cerr << "Caught exception: " << ex << std::endl;
+                pass = (ex.getName() == "DimensionalityMismatchEx");
+            }
+
+            ec.result(pass);
+        }
+    }
+}
 
 // Centroid
 //void test_cluster_centroid(ErrorContext &ec, unsigned int numRuns) { // TODO implement

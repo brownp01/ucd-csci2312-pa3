@@ -269,6 +269,7 @@ namespace Clustering {
 
             if (i < point.__dim)
                 point.setValue(i++, d);
+
             count++;
         }
 

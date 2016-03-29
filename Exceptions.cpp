@@ -60,7 +60,7 @@ namespace Clustering {
 
     std::ostream &Clustering::operator<<(std::ostream &os, const DimensionalityMismatchEx &ex) {
 
-        os << "The current size of " << ex.__current << " does not match the other size of " << ex.__rhs << std::endl;
+        os << "The current size of " << ex.__current << " is not a match for the other size of " << ex.__rhs << std::endl;
 
         return os;
     }
@@ -121,6 +121,24 @@ namespace Clustering {
     std::ostream &Clustering::operator<<(std::ostream &os, const ZeroDimensionsEx &ex) {
 
         os << "the dimensions equal zero" << std::endl;
+
+        return os;
+    }
+
+    EmptyClusterEx::EmptyClusterEx() {
+
+        __name = "EmptyClusterEx";
+
+    }
+
+    std::string EmptyClusterEx::getName() const {
+
+        return __name;
+    }
+
+    std::ostream &Clustering::operator<<(std::ostream &os, const EmptyClusterEx &ex) {
+
+        os << "This cluster is empty" << std::endl;
 
         return os;
     }
