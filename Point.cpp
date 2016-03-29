@@ -3,6 +3,7 @@
 //
 
 #include "Point.h"
+#include "Exceptions.h"
 #include <cmath>
 #include <sstream>
 
@@ -15,9 +16,13 @@ namespace Clustering {
 
     Point::Point(unsigned int initDim) {
 
+        if (initDim == 0)
+            throw ZeroDimensionsEx();
+
         __id = ++__idGen;
         __dim = initDim;
         __values = new double[__dim];
+
 
         for (int i = 0; i < __dim; i++)
             __values[i] = 0;
@@ -25,7 +30,6 @@ namespace Clustering {
     }
 
     Point::Point(unsigned int initDim, double *initValues) : Point(initDim) {
-
 
         for (int i = 0; i < initDim; i++)
             __values[i] = initValues[i];
@@ -45,7 +49,10 @@ namespace Clustering {
 
     Point &Point::operator=(const Point &point) {
 
-        if (this == &point)
+        if (__dim != point.__dim)
+            throw DimensionalityMismatchEx(__dim, point.__dim);
+
+        else if (this == &point)
             return *this;
 
         else {
@@ -69,10 +76,16 @@ namespace Clustering {
 
     void Point::setValue(unsigned int dim, double newValues) {
 
+        if (__dim <= dim || dim < 0)
+            throw OutOfBoundsEx(dim, __dim);
+
         __values[dim] = newValues;
     }
 
     double Point::getValue(unsigned int dim) const {
+
+        if (__dim <= dim || dim < 0)
+            throw OutOfBoundsEx(dim, __dim);
 
         return __values[dim];
     }
@@ -80,6 +93,9 @@ namespace Clustering {
     double Point::distanceTo(const Point &point) const {
 
         double sum = 0;
+
+        if (__dim != point.__dim)
+            throw DimensionalityMismatchEx(__dim, point.__dim);
 
         for (int i = 0; i < __dim; i++)
             sum += pow(__values[i] - point.__values[i], 2);
@@ -126,6 +142,9 @@ namespace Clustering {
 
     Point &operator+=(Point &point, const Point &point1) {
 
+        if (point.__dim != point1.__dim)
+            throw DimensionalityMismatchEx(point.__dim, point1.__dim);
+
         for (int i = 0; i < point.__dim; i++)
             point.__values[i] += point1.__values[i];
 
@@ -133,6 +152,9 @@ namespace Clustering {
     }
 
     Point &operator-=(Point &point, const Point &point1) {
+
+        if (point.__dim != point1.__dim)
+            throw DimensionalityMismatchEx(point.__dim, point1.__dim);
 
         for (int i = 0; i < point.__dim; i++)
             point.__values[i] -= point1.__values[i];
@@ -170,10 +192,16 @@ namespace Clustering {
 
     bool operator!=(const Point &point, const Point &point1) {
 
+        if (point.__dim != point1.__dim)
+            throw DimensionalityMismatchEx(point.__dim, point1.__dim);
+
         return ! (point == point1);
     }
 
     bool operator<(const Point &point, const Point &point1) {
+
+        if (point.__dim != point1.__dim)
+            throw DimensionalityMismatchEx(point.__dim, point1.__dim);
 
         for (int i = 0; i < point.__dim; i++) {
             if (point.__values[i] < point1.__values[i])
@@ -184,6 +212,9 @@ namespace Clustering {
 
     bool operator>(const Point &point, const Point &point1) {
 
+        if (point.__dim != point1.__dim)
+            throw DimensionalityMismatchEx(point.__dim, point1.__dim);
+
         for (int i = 0; i < point.__dim; i++) {
             if (point.__values[i] > point1.__values[i])
                 return true;
@@ -193,6 +224,9 @@ namespace Clustering {
 
     bool operator<=(const Point &point, const Point &point1) {
 
+        if (point.__dim != point1.__dim)
+            throw DimensionalityMismatchEx(point.__dim, point1.__dim);
+
         for (int i = 0; i < point.__dim; i++) {
             if (point.__values[i] <= point1.__values[i])
                 return true;
@@ -201,6 +235,9 @@ namespace Clustering {
     }
 
     bool operator>=(const Point &point, const Point &point1) {
+
+        if (point.__dim != point1.__dim)
+            throw DimensionalityMismatchEx(point.__dim, point1.__dim);
 
         for (int i = 0; i < point.__dim; i++) {
             if (point.__values[i] >= point1.__values[i])
@@ -223,14 +260,20 @@ namespace Clustering {
 
         int i = 0;
         std::string value;
+        int count = 0;
 
-
-        while (getline(istream, value, ',')) {
+        while (getline(istream, value, point.POINT_VALUE_DELIM)) {
             double d;
             d = stod(value);
             std::cout << "Value: " << d << std::endl;
-            point.setValue(i++, d);
+
+            if (i < point.__dim)
+                point.setValue(i++, d);
+            count++;
         }
+
+        if (count != point.__dim)
+            throw DimensionalityMismatchEx(i, point.__dim);
 
         std::cout << "Point: " << point << std::endl;
 
@@ -238,6 +281,9 @@ namespace Clustering {
     }
 
     double &Point::operator[](unsigned int index) {
+
+        if (__dim <= index || index < 0)
+            throw OutOfBoundsEx(index, __dim);
         return __values[index];
     }
 

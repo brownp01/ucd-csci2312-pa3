@@ -10,10 +10,14 @@ using Clustering::Point;
 
 namespace Clustering {
 
+    unsigned int Cluster::__idGenerator = 0;
+    const char Cluster::POINT_CLUSTER_ID_DELIM = ':';
 
-    Cluster::Cluster(const Cluster &cluster) {
+
+    Cluster::Cluster(const Cluster &cluster) : centroid(__dimensionality, *this){
 
         __size = 0;
+        __id = ++__idGenerator;
 
         if (cluster.__points == nullptr){
             assert (cluster.__size == 0);
@@ -25,6 +29,8 @@ namespace Clustering {
         else
             __cpy(cluster.__points);
 
+        __id = cluster.__id;
+
     }
 
     Cluster &Cluster::operator=(const Cluster &cluster) {
@@ -34,6 +40,8 @@ namespace Clustering {
 
         __del();
         __cpy(cluster.__points);
+
+        __id = cluster.__id;
 
         return *this;
     }
@@ -302,6 +310,22 @@ namespace Clustering {
         }
 
         return false;
+    }
+
+    Cluster::Cluster(unsigned int d) : centroid(__dimensionality, *this) {
+
+        __dimensionality = d;
+        __size = 0;
+        __points = nullptr;
+
+    }
+
+    Cluster::Centroid::Centroid(unsigned int d, const Cluster &c) : __p(d), __c(c) {
+
+        __dimensions = d;
+        __valid = false;
+        const Cluster &__c = c;
+
     }
 }
 
