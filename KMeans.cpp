@@ -15,6 +15,7 @@ namespace Clustering {
         __maxIter = maxIter;
 
 
+
     }
 
     KMeans::~KMeans() {
@@ -40,5 +41,21 @@ namespace Clustering {
     unsigned int KMeans::getNumMovesLastIter() {
 
         return __numMovesLastIter;
+    }
+
+    Cluster &KMeans::operator[](unsigned int u) {
+
+    }
+
+    const Cluster &KMeans::operator[](unsigned int u) const {
+
+    }
+
+    std::ostream &Clustering::operator<<(std::ostream &os, const KMeans &kmeans) {
+
+    }
+
+    void KMeans::run() {
+
     }
 }

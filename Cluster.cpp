@@ -69,11 +69,13 @@ namespace Clustering {
             __points = a;
             centroid.setValid(false);
         }
-        else if (__points->point > point) {
-            a->next = __points;
-            __points = a;
-        }
+
         else {
+            if (contains(point))
+                return;
+
+            centroid.setValid(false);
+
             LNodePtr curr = __points, nxt = __points->next;
             while (true) {
                 if (nxt == nullptr || nxt->point > point) {
@@ -81,6 +83,12 @@ namespace Clustering {
                     a->next = nxt;
                     break;
                 }
+                else if (__points->point > point) {
+                    a->next = curr;
+                    curr = a;
+
+                }
+
                 else {
                     curr = nxt;
                     nxt = nxt->next;
@@ -163,15 +171,15 @@ namespace Clustering {
             std::stringstream lineStream(line);
 
             // call to Point::operator>>
-            lineStream >> p;
+            try {
+                lineStream >> p;
+                cluster.add(p);
+            }
+            catch (DimensionalityMismatchEx &ex) {
+                std::cout << "Caught an exception of mismatched dimensionality: " << ex << std::endl;
+                p.rewindIdGen();
+            }
 
-            cluster.add(p);
-
-//            if (cluster.__points->point != p) {
-//                p.rewindIdGen();
-//                throw DimensionalityMismatchEx(cluster.__points->point, p);
-
-            //}
         }
 
         return istream;
@@ -477,8 +485,11 @@ namespace Clustering {
 
     void Cluster::pickCentroids(unsigned int k, Point **pointArray) {
 
+        if (k == __size){
 
-
+            for (int i = 0; i < __size; i++)
+                *(pointArray[i]) = (*this)[i];
+        }
     }
 }
 

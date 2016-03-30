@@ -2622,765 +2622,765 @@ void test_cluster_id(ErrorContext &ec, unsigned int numRuns) {
     }
 }
 //
-//// Init element selection ("pickCentroids")
-//void test_cluster_initselection(ErrorContext &ec, unsigned int numRuns) {
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - Cluster - Select initial centroids ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-//        ec.DESC("k == size of Cluster");
-//
-//        {
-//            unsigned int k = 10;
-//            Cluster c(20);
-//            for (int i = 0; i < k; i++) {
-//                Point p(20);
-//                for (int j = 0; j < 20; j++)
-//                    p[j] = 2.3 * i * i + 1.45 * j + 5.67;
-//                c.add(p);
-//            }
-//            Point **pointArray = new Point*[k];
-//            for (int i=0; i<k; i++) pointArray[i] = new Point(20);
-//            c.pickCentroids(k, pointArray);
-//
-//            pass = true;
-//
-//            // all Cluster points should be returned as centroids
-//            for (int i = 0; i < k; i++) {
-//                pass = pass && (*pointArray[i] == c[i]);
-//            }
-//
-//            // clean up
-//            for (int i=0; i<k; i++) delete pointArray[i];
-//            delete [] pointArray;
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("k > size of Cluster");
-//
-//        {
-//            unsigned int k = 10;
-//            Cluster c(20);
-//            for (int i = 0; i < k/2; i++) {
-//                Point p(20);
-//                for (int j = 0; j < 20; j++)
-//                    p[j] = 2.3 * i * i + 1.45 * j + 5.67;
-//                c.add(p);
-//            }
-//
-//            Point **pointArray = new Point*[k];
-//            for (int i=0; i<k; i++) pointArray[i] = new Point(20);
-//            c.pickCentroids(k, pointArray);
-//
-//            pass = true;
-//
-//            // all Cluster points should be returned as centroids
-//            int i = 0;
-//            for ( ; i < k/2; i++) {
-//                pass = pass && (*pointArray[i] == c[i]);
-//                delete pointArray[i];
-//            }
-//
-//            Point inf(20);
-//            for (int j = 0; j < 20; j++) inf[j] = std::numeric_limits<double>::max();
-//            for ( ; i < k; i++) {
-//                for (int ii=0; ii<20; ii++) { // note: id's won't match so compare value-by-value
-//                    Point p = *pointArray[i];
-//                    pass = pass && (p[ii] == inf[ii]);
-//                }
-//                delete pointArray[i];
-//            }
-//
-//            // clean up
-//            delete [] pointArray;
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("k < size of Cluster");
-//
-//        {
-//            unsigned int k = 3;
-//            Cluster c(20);
-//            for (int i = 0; i < 50; i++) {
-//                Point p(20);
-//                for (int j = 0; j < 20; j++)
-//                    p[j] = 2.3 * i * i + 1.45 * j + 5.67;
-//                c.add(p);
-//            }
-//            Point **pointArray = new Point*[k];
-//            for (int i=0; i<k; i++) pointArray[i] = new Point(20);
-//            c.pickCentroids(k, pointArray);
-//
-//            pass = true;
-//
-//            // test if pointArray was assigned with points from the Cluster
-//            Point empty(20);
-//            for (int i = 0; i < k; i++) {
-//                pass = pass && (*pointArray[i] != empty) && c.contains(*pointArray[i]);
-//                delete pointArray[i];
-//            }
-//
-//            // clean up
-//            delete [] pointArray;
-//
-//            ec.result(pass);
-//        }
-//
-////        ec.DESC("k=13 < size=15000 of Cluster - COMMENTED OUT");
-////        pass = true;
-//        ec.DESC("k=13 << Cluster size=15000");
-//
-//        {
-//            unsigned int k = 13;
-//            Cluster c(20);
-//            for (int i = 0; i < 15000; i++) {
-//                Point p(20);
-//                for (int j = 0; j < 20; j++)
-//                    p[j] = 2.3 * i * i + 1.45 * j + 5.67;
-//                c.add(p);
-//            }
-//            Point **pointArray = new Point*[k];
-//            for (int i=0; i<k; i++) pointArray[i] = new Point(20);
-//            c.pickCentroids(k, pointArray);
-//
-//            pass = true;
-//
-//            // test if pointArray was assigned with pointers from the Cluster
-//            for (int i = 0; i < k; i++) {
-//                pass = pass && (pointArray[i] != nullptr) && c.contains(*pointArray[i]);
-//                delete pointArray[i];
-//            }
-//
-//            // clean up
-//            delete [] pointArray;
-//
-//            ec.result(pass);
-//        }
-////        ec.result(pass);
-//    }
-//}
+// Init element selection ("pickCentroids")
+void test_cluster_initselection(ErrorContext &ec, unsigned int numRuns) {
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - Cluster - Select initial centroids ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("k == size of Cluster");
+
+        {
+            unsigned int k = 10;
+            Cluster c(20);
+            for (int i = 0; i < k; i++) {
+                Point p(20);
+                for (int j = 0; j < 20; j++)
+                    p[j] = 2.3 * i * i + 1.45 * j + 5.67;
+                c.add(p);
+            }
+            Point **pointArray = new Point*[k];
+            for (int i=0; i<k; i++) pointArray[i] = new Point(20);
+            c.pickCentroids(k, pointArray);
+
+            pass = true;
+
+            // all Cluster points should be returned as centroids
+            for (int i = 0; i < k; i++) {
+                pass = pass && (*pointArray[i] == c[i]);
+            }
+
+            // clean up
+            for (int i=0; i<k; i++) delete pointArray[i];
+            delete [] pointArray;
+
+            ec.result(pass);
+        }
+
+        ec.DESC("k > size of Cluster");
+
+        {
+            unsigned int k = 10;
+            Cluster c(20);
+            for (int i = 0; i < k/2; i++) {
+                Point p(20);
+                for (int j = 0; j < 20; j++)
+                    p[j] = 2.3 * i * i + 1.45 * j + 5.67;
+                c.add(p);
+            }
+
+            Point **pointArray = new Point*[k];
+            for (int i=0; i<k; i++) pointArray[i] = new Point(20);
+            c.pickCentroids(k, pointArray);
+
+            pass = true;
+
+            // all Cluster points should be returned as centroids
+            int i = 0;
+            for ( ; i < k/2; i++) {
+                pass = pass && (*pointArray[i] == c[i]);
+                delete pointArray[i];
+            }
+
+            Point inf(20);
+            for (int j = 0; j < 20; j++) inf[j] = std::numeric_limits<double>::max();
+            for ( ; i < k; i++) {
+                for (int ii=0; ii<20; ii++) { // note: id's won't match so compare value-by-value
+                    Point p = *pointArray[i];
+                    pass = pass && (p[ii] == inf[ii]);
+                }
+                delete pointArray[i];
+            }
+
+            // clean up
+            delete [] pointArray;
+
+            ec.result(pass);
+        }
+
+        ec.DESC("k < size of Cluster");
+
+        {
+            unsigned int k = 3;
+            Cluster c(20);
+            for (int i = 0; i < 50; i++) {
+                Point p(20);
+                for (int j = 0; j < 20; j++)
+                    p[j] = 2.3 * i * i + 1.45 * j + 5.67;
+                c.add(p);
+            }
+            Point **pointArray = new Point*[k];
+            for (int i=0; i<k; i++) pointArray[i] = new Point(20);
+            c.pickCentroids(k, pointArray);
+
+            pass = true;
+
+            // test if pointArray was assigned with points from the Cluster
+            Point empty(20);
+            for (int i = 0; i < k; i++) {
+                pass = pass && (*pointArray[i] != empty) && c.contains(*pointArray[i]);
+                delete pointArray[i];
+            }
+
+            // clean up
+            delete [] pointArray;
+
+            ec.result(pass);
+        }
+
+//        ec.DESC("k=13 < size=15000 of Cluster - COMMENTED OUT");
+//        pass = true;
+        ec.DESC("k=13 << Cluster size=15000");
+
+        {
+            unsigned int k = 13;
+            Cluster c(20);
+            for (int i = 0; i < 15000; i++) {
+                Point p(20);
+                for (int j = 0; j < 20; j++)
+                    p[j] = 2.3 * i * i + 1.45 * j + 5.67;
+                c.add(p);
+            }
+            Point **pointArray = new Point*[k];
+            for (int i=0; i<k; i++) pointArray[i] = new Point(20);
+            c.pickCentroids(k, pointArray);
+
+            pass = true;
+
+            // test if pointArray was assigned with pointers from the Cluster
+            for (int i = 0; i < k; i++) {
+                pass = pass && (pointArray[i] != nullptr) && c.contains(*pointArray[i]);
+                delete pointArray[i];
+            }
+
+            // clean up
+            delete [] pointArray;
+
+            ec.result(pass);
+        }
+//        ec.result(pass);
+    }
+}
 //
 // operator>>, operator<<
-//void test_cluster_IO(ErrorContext &ec, unsigned int numRuns) {
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - Cluster - Stream IO ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-//        ec.DESC("read from a file");
-//
-//        {
-//            std::ifstream csv("points4.csv");
-//            Cluster c(5);
-//            if (csv.is_open()) {
-//                csv >> c;
-//                csv.close();
-//            }
-//            pass = (c.getSize() == 4);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("read, write, and read again");
-//
-//        {
-//            std::ifstream csv("points4.csv");
-//            Cluster c(5);
-//            if (csv.is_open()) {
-//                csv >> c;
-//                csv.close();
-//            }
-//            pass = (c.getSize() == 4);
-//
-//            // add a point
-//            c.add(Point(5));
-//
-//            std::ofstream csv1("points4_1.csv", std::ofstream::out);
-//            csv1 << c;
-//            csv1.close();
-//
-//            std::ifstream csv2("points4_1.csv");
-//            int size = 0;
-//            std::string line;
-//            if (csv2.is_open()) {
-//                while (getline(csv2, line)) size ++;
-//                csv2.close();
-//            }
-//            pass = pass && (size == 5);
-//            if (! pass) std::cout << "size = " << size;
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("check element order");
-//
-//        {
-//            std::ifstream csv("points4.csv");
-//            Cluster c(5);
-//            if (csv.is_open()) {
-//                csv >> c;
-//                csv.close();
-//            }
-//
-//            pass = (c[0] > c[1] && c[1] > c[2] && c[2] > c[3]) ||
-//                   (c[0] < c[1] && c[1] < c[2] && c[2] < c[3]);
-//
-//            ec.result(pass);
-//        }
-//        ec.DESC("read from a file: 2 caught exceptions");
-//
-//        {
-//            std::ifstream csv("points4_ex.csv");
-//            Cluster c(5);
-//
-//            if (csv.is_open()) {
-//                csv >> c;
-//                csv.close();
-//
-//                pass = (c.getSize() == 2) &&
-//                       (c[0].getId() + 1 == c[1].getId()); // two points didn't load, but no id-s wasted
-//
-//                if (! pass)
-//                    std::cout << c[0].getId() << ' ' << c[1].getId() << std::endl;
-//            } else {
-//                pass = false;
-//            }
-//
-//            ec.result(pass);
-//        }
-//    }
-//}
-//
-//
-//
-//// - - - - - - - - - - K M E A N S - - - - - - - - - -
-//
-//// Smoketest: constructor, destructor, loading points
-//void test_kmeans_smoketest(ErrorContext &ec) {
-//    bool pass;
-//
-//    ec.DESC("--- Test - KMeans - Smoketest ---");
-//
-//    ec.DESC("constructor, destructor");
-//
+void test_cluster_IO(ErrorContext &ec, unsigned int numRuns) {
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - Cluster - Stream IO ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("read from a file");
+
+        {
+            std::ifstream csv("points4.csv");
+            Cluster c(5);
+            if (csv.is_open()) {
+                csv >> c;
+                csv.close();
+            }
+            pass = (c.getSize() == 4);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("read, write, and read again");
+
+        {
+            std::ifstream csv("points4.csv");
+            Cluster c(5);
+            if (csv.is_open()) {
+                csv >> c;
+                csv.close();
+            }
+            pass = (c.getSize() == 4);
+
+            // add a point
+            c.add(Point(5));
+
+            std::ofstream csv1("points4_1.csv", std::ofstream::out);
+            csv1 << c;
+            csv1.close();
+
+            std::ifstream csv2("points4_1.csv");
+            int size = 0;
+            std::string line;
+            if (csv2.is_open()) {
+                while (getline(csv2, line)) size ++;
+                csv2.close();
+            }
+            pass = pass && (size == 5);
+            if (! pass) std::cout << "size = " << size;
+
+            ec.result(pass);
+        }
+
+        ec.DESC("check element order");
+
+        {
+            std::ifstream csv("points4.csv");
+            Cluster c(5);
+            if (csv.is_open()) {
+                csv >> c;
+                csv.close();
+            }
+
+            pass = (c[0] > c[1] && c[1] > c[2] && c[2] > c[3]) ||
+                   (c[0] < c[1] && c[1] < c[2] && c[2] < c[3]);
+
+            ec.result(pass);
+        }
+        ec.DESC("read from a file: 2 caught exceptions");
+
+        {
+            std::ifstream csv("points4_ex.csv");
+            Cluster c(5);
+
+            if (csv.is_open()) {
+                csv >> c;
+                csv.close();
+
+                pass = (c.getSize() == 2) &&
+                       (c[0].getId() + 1 == c[1].getId()); // two points didn't load, but no id-s wasted
+
+                if (! pass)
+                    std::cout << c[0].getId() << ' ' << c[1].getId() << std::endl;
+            } else {
+                pass = false;
+            }
+
+            ec.result(pass);
+        }
+    }
+}
+
+
+
+// - - - - - - - - - - K M E A N S - - - - - - - - - -
+
+// Smoketest: constructor, destructor, loading points
+void test_kmeans_smoketest(ErrorContext &ec) {
+    bool pass;
+
+    ec.DESC("--- Test - KMeans - Smoketest ---");
+
+    ec.DESC("constructor, destructor");
+
+    pass = true;
+    for (int i = 0; i < 10; i ++) {
+
+        KMeans kmeans(5, 3, "points4.csv", 20);
+
+    }
+    ec.result(pass);
+
+    ec.DESC("empty filename");
+
+    pass = true;
+    for (int i = 0; i < 10; i ++) {
+
+        try {
+            KMeans kmeans(5, 3, "", 20);
+            pass = false;
+        } catch (DataFileOpenEx &ex) {
+            std::cerr << "Caught exception: " << ex << std::endl;
+            pass = (ex.getName() == "DataFileOpenEx");
+        }
+
+    }
+    ec.result(pass);
+
+    ec.DESC("non-existent filename");
+
+    pass = true;
+    for (int i = 0; i < 10; i ++) {
+
+        try {
+            KMeans kmeans(5, 3, "no_such_file.csv", 20);
+            pass = false;
+        } catch (DataFileOpenEx &ex) {
+            std::cerr << "Caught exception: " << ex << std::endl;
+            pass = (ex.getName() == "DataFileOpenEx");
+        }
+
+    }
+    ec.result(pass);
+
+    ec.DESC("k = 0");
+
+    pass = true;
+    for (int i = 0; i < 10; i ++) {
+
+        try {
+            KMeans kmeans(5, 0, "points4.csv", 20);
+            pass = false;
+        } catch (ZeroClustersEx &ex) {
+            std::cerr << "Caught exception: " << ex << std::endl;
+            pass = (ex.getName() == "ZeroClustersEx");
+        }
+
+    }
+    ec.result(pass);
+
+
+    ec.DESC("zero dimensions");
+    pass = true;
+    for (int i = 0; i < 10; i ++) {
+
+        // Construct a Point
+        // At the end of the block, destructor will be called
+        try {
+            KMeans kmeans(0, 3, "points4.csv", 20);
+            pass = false;
+        } catch (ZeroDimensionsEx &ex) {
+            std::cerr << "Caught exception: " << ex << std::endl;
+            pass = (ex.getName() == "ZeroDimensionsEx");
+        }
+
+        if (!pass) break;
+    }
+    ec.result(pass);
+
+    ec.DESC("loading small data file");
+
+    pass = true;
+    for (int i = 0; i < 10; i ++) {
+
+        KMeans kmeans(5, 3, "points4.csv", 20);
+
+        pass = pass && (kmeans[0].getSize() == 4);
+        if (! pass) break;
+
+    }
+    ec.result(pass);
+
+    ec.DESC("no copy, no assignment");
+
+    pass = true;
+    for (int i = 0; i < 10; i ++) {
+
+        KMeans kmeans(5, 3, "points4.csv", 20);
+
+//        KMeans kmeans1(kmeans); // deleted copy constructor
+//        KMeans kmeans1 = kmeans; // deleted copy constructor
+
+        KMeans kmeans1(5, 5, "points4.csv", 20);
+
+//        kmeans1 = kmeans; // deleted operator '='
+    }
+    ec.result(pass);
+
+    ec.DESC("loading medium data file");
+
+    pass = true;
+    for (int i = 0; i < 10; i ++) {
+
+        KMeans kmeans(3, 3, "points2499.csv", 20);
+
+        pass = pass && (kmeans[0].getSize() == 2499);
+        if (! pass) break;
+
+    }
+    ec.result(pass);
+
+//    ec.DESC("loading large data file - COMMENTED OUT");
 //    pass = true;
-//    for (int i = 0; i < 10; i ++) {
-//
-//        KMeans kmeans(5, 3, "points4.csv", 20);
-//
-//    }
-//    ec.result(pass);
-//
-//    ec.DESC("empty filename");
-//
-//    pass = true;
-//    for (int i = 0; i < 10; i ++) {
-//
-//        try {
-//            KMeans kmeans(5, 3, "", 20);
-//            pass = false;
-//        } catch (DataFileOpenEx &ex) {
-//            std::cerr << "Caught exception: " << ex << std::endl;
-//            pass = (ex.getName() == "DataFileOpenEx");
-//        }
-//
-//    }
-//    ec.result(pass);
-//
-//    ec.DESC("non-existent filename");
-//
-//    pass = true;
-//    for (int i = 0; i < 10; i ++) {
-//
-//        try {
-//            KMeans kmeans(5, 3, "no_such_file.csv", 20);
-//            pass = false;
-//        } catch (DataFileOpenEx &ex) {
-//            std::cerr << "Caught exception: " << ex << std::endl;
-//            pass = (ex.getName() == "DataFileOpenEx");
-//        }
-//
-//    }
-//    ec.result(pass);
-//
-//    ec.DESC("k = 0");
-//
-//    pass = true;
-//    for (int i = 0; i < 10; i ++) {
-//
-//        try {
-//            KMeans kmeans(5, 0, "points4.csv", 20);
-//            pass = false;
-//        } catch (ZeroClustersEx &ex) {
-//            std::cerr << "Caught exception: " << ex << std::endl;
-//            pass = (ex.getName() == "ZeroClustersEx");
-//        }
-//
-//    }
-//    ec.result(pass);
-//
-//
-//    ec.DESC("zero dimensions");
-//    pass = true;
-//    for (int i = 0; i < 10; i ++) {
-//
-//        // Construct a Point
-//        // At the end of the block, destructor will be called
-//        try {
-//            KMeans kmeans(0, 3, "points4.csv", 20);
-//            pass = false;
-//        } catch (ZeroDimensionsEx &ex) {
-//            std::cerr << "Caught exception: " << ex << std::endl;
-//            pass = (ex.getName() == "ZeroDimensionsEx");
-//        }
-//
-//        if (!pass) break;
-//    }
-//    ec.result(pass);
-//
-//    ec.DESC("loading small data file");
-//
-//    pass = true;
-//    for (int i = 0; i < 10; i ++) {
-//
-//        KMeans kmeans(5, 3, "points4.csv", 20);
-//
-//        pass = pass && (kmeans[0].getSize() == 4);
-//        if (! pass) break;
-//
-//    }
-//    ec.result(pass);
-//
-//    ec.DESC("no copy, no assignment");
-//
-//    pass = true;
-//    for (int i = 0; i < 10; i ++) {
-//
-//        KMeans kmeans(5, 3, "points4.csv", 20);
-//
-////        KMeans kmeans1(kmeans); // deleted copy constructor
-////        KMeans kmeans1 = kmeans; // deleted copy constructor
-//
-//        KMeans kmeans1(5, 5, "points4.csv", 20);
-//
-////        kmeans1 = kmeans; // deleted operator '='
-//    }
-//    ec.result(pass);
-//
-//    ec.DESC("loading medium data file");
-//
-//    pass = true;
-//    for (int i = 0; i < 10; i ++) {
-//
-//        KMeans kmeans(3, 3, "points2499.csv", 20);
-//
-//        pass = pass && (kmeans[0].getSize() == 2499);
-//        if (! pass) break;
-//
-//    }
-//    ec.result(pass);
-//
-////    ec.DESC("loading large data file - COMMENTED OUT");
-////    pass = true;
-//    ec.DESC("loading large data file (RUNS LONG)");
-//
-//    pass = true;
-//    for (int i = 0; i < 10; i ++) {
-//
-//        KMeans kmeans(50, 3, "points25000.csv", 20);
-//
-//        pass = pass && (kmeans[0].getSize() == 25000);
-//        if (! pass) break;
-//
-//    }
-//    ec.result(pass);
-//}
-//
-//// running
-//void test_kmeans_run(ErrorContext &ec, unsigned int numRuns) {
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - KMeans - Run ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-//        ec.DESC("4 points, 4 clusters");
-//
-//        {
-//            KMeans kmeans(5, 4, "points4.csv", 20);
-//
-//            kmeans.run();
-//
-//            // The points should end up each in its own cluster
-//            pass =  (kmeans.getNumNonemptyClusters() == 4) &&
-//                    (kmeans[0].getSize() == 1) &&
-//                    (kmeans[1].getSize() == 1) &&
-//                    (kmeans[2].getSize() == 1) &&
-//                    (kmeans[3].getSize() == 1);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("4 points, 4 clusters (iterations & moves)");
-//
-//        {
-//            unsigned int iter = 20, prevIter = 0;
-//
-//            pass = true;
-//            for (unsigned int i=1; i<=iter; ++i) {
-//                KMeans kmeans(5, 4, "points4.csv", i);
-//
-//                kmeans.run();
-//
-//                if (kmeans.getNumMovesLastIter() > 0) {
-//                    pass = pass && (i > prevIter);
-//                    prevIter = i;
-//                    pass = pass &&
-//                           !((kmeans.getNumNonemptyClusters() == 4) &&
-//                             (kmeans[0].getSize() == 1) &&
-//                             (kmeans[1].getSize() == 1) &&
-//                             (kmeans[2].getSize() == 1) &&
-//                             (kmeans[3].getSize() == 1));
-//                } else {
-//
-//                    pass = (kmeans.getNumNonemptyClusters() == 4) &&
-//                           (kmeans[0].getSize() == 1) &&
-//                           (kmeans[1].getSize() == 1) &&
-//                           (kmeans[2].getSize() == 1) &&
-//                           (kmeans[3].getSize() == 1);
-//                    break;
-//                }
-//            }
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("2499 points, k=1..15");
-//
-//        {
-//            pass = true;
-//
-//            for (unsigned int k=1; k<16; ++k) {
-//                std::cout << "k = " << k << std::endl;
-//
-//                KMeans kmeans(3, k, "points2499.csv", 20);
-//                kmeans.run();
-//                pass = pass && (kmeans.getNumNonemptyClusters() == k);
-//            }
-//
-//            ec.result(pass);
-//        }
-//    }
-//}
-//
-//// operator<<
-//void test_kmeans_IO(ErrorContext &ec, unsigned int numRuns) {
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - KMeans - IO ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-//        ec.DESC("write out to a file, 4 points, 4 clusters");
-//
-//        {
-//            KMeans kmeans(5, 4, "points4.csv", 20);
-//
-//            kmeans.run();
-//
-//            // The points should end up each in its own cluster
-//            pass =  (kmeans.getNumNonemptyClusters() == 4) &&
-//                    (kmeans[0].getSize() == 1) &&
-//                    (kmeans[1].getSize() == 1) &&
-//                    (kmeans[2].getSize() == 1) &&
-//                    (kmeans[3].getSize() == 1);
-//
-//            std::ofstream csv1("points4_2.csv", std::ofstream::out);
-//            csv1 << kmeans;
-//            csv1.close();
-//
-//            ClusterCounts cc("points4_2.csv");
-//            pass = pass && cc.parse_and_analyze() &&
-//                   (cc.get_num_clusters() == 4) &&
-//                   (cc.get_num_points() == 4);
-//
-//            ec.result(pass);
-//        }
-//
-////        ec.DESC("write out to a file, 2499 points, 6 clusters - COMMENTED OUT");
-////        pass = true;
-//        ec.DESC("write out to a file, 2499 points, 6 clusters (RUNS LONG)");
-//
-//        {
-//            KMeans kmeans(3, 6, "points2499.csv", 20);
-//
-//            kmeans.run();
-//
-//            pass = (kmeans.getNumNonemptyClusters() == 6);
-//
-//            std::ofstream csv1("points2499_2.csv", std::ofstream::out);
-//            csv1 << kmeans;
-//            csv1.close();
-//
-//            ClusterCounts cc("points2499_2.csv");
-//            pass = pass && cc.parse_and_analyze() &&
-//                   (cc.get_num_clusters() == 6) &&
-//                   (cc.get_num_points() == 2499);
-//
-//            ec.result(pass);
-//        }
-////        ec.result(pass);
-//    }
-//}
-//
-//// K larger than number of points
-//void test_kmeans_toofewpoints(ErrorContext &ec, unsigned int numRuns) {
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - KMeans - Too few points ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-//        ec.DESC("4 points with k=8");
-//
-//        {
-//            KMeans kmeans(5, 8, "points4.csv", 20);
-//
-//            kmeans.run();
-//
-//            // The points should end up each in its own cluster
-//            pass =  (kmeans.getNumNonemptyClusters() == 4) &&
-//                    (kmeans[0].getSize() == 1) &&
-//                    (kmeans[1].getSize() == 1) &&
-//                    (kmeans[2].getSize() == 1) &&
-//                    (kmeans[3].getSize() == 1);
-//
-//            std::ofstream csv1("points4_2.csv", std::ofstream::out);
-//            csv1 << kmeans;
-//            csv1.close();
-//
-//            ClusterCounts cc("points4_2.csv");
-//            pass = pass && cc.parse_and_analyze() &&
-//                   (cc.get_num_clusters() == 4) &&
-//                   (cc.get_num_points() == 4);
-//
-//            ec.result(pass);
-//        }
-//
-////        ec.DESC("2499 points, k=2520 - COMMENTED OUT");
-////        pass = true;
-//        ec.DESC("2499 points, k=2520 (RUNS LONG)");
-//
-//        {
-//            KMeans kmeans(3, 2520, "points2499.csv", 20);
-//
-//            kmeans.run();
-//
-//            pass = (kmeans.getNumNonemptyClusters() > 0) &&
-//                   (kmeans.getNumNonemptyClusters() <= 2499);
-//
-//            std::ofstream csv1("points2499_2.csv", std::ofstream::out);
-//            csv1 << kmeans;
-//            csv1.close();
-//
-//            ClusterCounts cc("points2499_2.csv");
-//            bool parse_success;
-//            pass = pass && (parse_success = cc.parse_and_analyze()) &&
-//                   (cc.get_num_clusters() < 2520) &&    // this is the only meaningful test for the number of clusters
-//                                                        // the exact number will vary with implementation
-//                   (cc.get_num_points() == 2499);
-//
-//            ec.result(pass);
-//        }
-////        ec.result(pass);
-//    }
-//}
-//
-//
-//// Check if scoring works with large points
-//void test_kmeans_largepoints(ErrorContext &ec, unsigned int numRuns) {
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - KMeans - Large points ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-//        ec.DESC("4 large points, k=1");
-//
-//        {
-//            KMeans kmeans(4, 1, "points4_large.csv", 20);
-//
-//            kmeans.run();
-//
-//            pass = kmeans.getNumNonemptyClusters() == 1;
-//
-//            std::ofstream csv1("points4_large_2.csv", std::ofstream::out);
-//            csv1 << kmeans;
-//            csv1.close();
-//
-//            ClusterCounts cc("points4_large_2.csv");
-//            bool parse_success;
-//            pass = pass &&
-//                   (parse_success = cc.parse_and_analyze()) &&
-//                   (cc.get_num_clusters() == 1) &&
-//                   (cc.get_num_points() == 4);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("4 large points, k=2");
-//
-//        {
-//            KMeans kmeans(4, 2, "points4_large.csv", 20);
-//
-//            kmeans.run();
-//
-//            pass = kmeans.getNumNonemptyClusters() == 2;
-//
-//            std::ofstream csv1("points4_large_2.csv", std::ofstream::out);
-//            csv1 << kmeans;
-//            csv1.close();
-//
-//            ClusterCounts cc("points4_large_2.csv");
-//            bool parse_success;
-//            pass = pass &&
-//                   (parse_success = cc.parse_and_analyze()) &&
-//                   (cc.get_num_clusters() == 2) &&
-//                   (cc.get_num_points() == 4);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("4 large points, k=3");
-//
-//        {
-//            KMeans kmeans(4, 3, "points4_large.csv", 20);
-//
-//            kmeans.run();
-//
-//            pass = kmeans.getNumNonemptyClusters() == 3;
-//
-//            std::ofstream csv1("points4_large_2.csv", std::ofstream::out);
-//            csv1 << kmeans;
-//            csv1.close();
-//
-//            ClusterCounts cc("points4_large_2.csv");
-//            bool parse_success;
-//            pass = pass &&
-//                   (parse_success = cc.parse_and_analyze()) &&
-//                   (cc.get_num_clusters() ==3 ) &&
-//                   (cc.get_num_points() == 4);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("4 large points, k=4");
-//
-//        {
-//            KMeans kmeans(4, 4, "points4_large.csv", 20);
-//
-//            kmeans.run();
-//
-//            pass = kmeans.getNumNonemptyClusters() == 4;
-//
-//            std::ofstream csv1("points4_large_2.csv", std::ofstream::out);
-//            csv1 << kmeans;
-//            csv1.close();
-//
-//            ClusterCounts cc("points4_large_2.csv");
-//            bool parse_success;
-//            pass = pass &&
-//                   (parse_success = cc.parse_and_analyze()) &&
-//                   (cc.get_num_clusters() == 4) &&
-//                   (cc.get_num_points() == 4);
-//
-//            ec.result(pass);
-//        }
-//    }
-//}
-//
-//// Large k, less than number of points
-//void test_kmeans_toomanyclusters(ErrorContext &ec, unsigned int numRuns) {
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - KMeans - Too many clusters ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-////        ec.DESC("2499 points, k=250 - COMMENTED OUT");
-////        pass = true;
-//        ec.DESC("2499 points, k=250 (RUNS LONG)");
-//
-//        {
-//            KMeans kmeans(3, 250, "points2499.csv", 20);
-//
-//            kmeans.run();
-//
-//            pass = kmeans.getNumNonemptyClusters() == 250;
-//
-//            std::ofstream csv1("points2499_2.csv", std::ofstream::out);
-//            csv1 << kmeans;
-//            csv1.close();
-//
-//            ClusterCounts cc("points2499_2.csv");
-//            bool parse_success;
-//            pass = pass && (parse_success = cc.parse_and_analyze()) &&
-//                   (cc.get_num_clusters() <= 250) &&
-//                   (cc.get_num_points() == 2499);
-//
-//            ec.result(pass);
-//        }
-////        ec.result(pass);
-//
-////        ec.DESC("2499 points, k=520 - COMMENTED OUT");
-////        pass = true;
-//        ec.DESC("2499 points, k=520 (RUNS LONG)");
-//
-//        {
-//            KMeans kmeans(3, 520, "points2499.csv", 20);
-//
-//            kmeans.run();
-//
-//            pass = kmeans.getNumNonemptyClusters() == 520;
-//
-//            std::ofstream csv1("points2499_2.csv", std::ofstream::out);
-//            csv1 << kmeans;
-//            csv1.close();
-//
-//            ClusterCounts cc("points2499_2.csv");
-//            bool parse_success;
-//            pass = pass && (parse_success = cc.parse_and_analyze()) &&
-//                   (cc.get_num_clusters() == 520) &&
-//                   (cc.get_num_points() == 2499);
-//
-//            ec.result(pass);
-//        }
-////        ec.result(pass);
-//    }
-//}
+    ec.DESC("loading large data file (RUNS LONG)");
+
+    pass = true;
+    for (int i = 0; i < 10; i ++) {
+
+        KMeans kmeans(50, 3, "points25000.csv", 20);
+
+        pass = pass && (kmeans[0].getSize() == 25000);
+        if (! pass) break;
+
+    }
+    ec.result(pass);
+}
+
+// running
+void test_kmeans_run(ErrorContext &ec, unsigned int numRuns) {
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - KMeans - Run ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("4 points, 4 clusters");
+
+        {
+            KMeans kmeans(5, 4, "points4.csv", 20);
+
+            kmeans.run();
+
+            // The points should end up each in its own cluster
+            pass =  (kmeans.getNumNonemptyClusters() == 4) &&
+                    (kmeans[0].getSize() == 1) &&
+                    (kmeans[1].getSize() == 1) &&
+                    (kmeans[2].getSize() == 1) &&
+                    (kmeans[3].getSize() == 1);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("4 points, 4 clusters (iterations & moves)");
+
+        {
+            unsigned int iter = 20, prevIter = 0;
+
+            pass = true;
+            for (unsigned int i=1; i<=iter; ++i) {
+                KMeans kmeans(5, 4, "points4.csv", i);
+
+                kmeans.run();
+
+                if (kmeans.getNumMovesLastIter() > 0) {
+                    pass = pass && (i > prevIter);
+                    prevIter = i;
+                    pass = pass &&
+                           !((kmeans.getNumNonemptyClusters() == 4) &&
+                             (kmeans[0].getSize() == 1) &&
+                             (kmeans[1].getSize() == 1) &&
+                             (kmeans[2].getSize() == 1) &&
+                             (kmeans[3].getSize() == 1));
+                } else {
+
+                    pass = (kmeans.getNumNonemptyClusters() == 4) &&
+                           (kmeans[0].getSize() == 1) &&
+                           (kmeans[1].getSize() == 1) &&
+                           (kmeans[2].getSize() == 1) &&
+                           (kmeans[3].getSize() == 1);
+                    break;
+                }
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("2499 points, k=1..15");
+
+        {
+            pass = true;
+
+            for (unsigned int k=1; k<16; ++k) {
+                std::cout << "k = " << k << std::endl;
+
+                KMeans kmeans(3, k, "points2499.csv", 20);
+                kmeans.run();
+                pass = pass && (kmeans.getNumNonemptyClusters() == k);
+            }
+
+            ec.result(pass);
+        }
+    }
+}
+
+// operator<<
+void test_kmeans_IO(ErrorContext &ec, unsigned int numRuns) {
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - KMeans - IO ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("write out to a file, 4 points, 4 clusters");
+
+        {
+            KMeans kmeans(5, 4, "points4.csv", 20);
+
+            kmeans.run();
+
+            // The points should end up each in its own cluster
+            pass =  (kmeans.getNumNonemptyClusters() == 4) &&
+                    (kmeans[0].getSize() == 1) &&
+                    (kmeans[1].getSize() == 1) &&
+                    (kmeans[2].getSize() == 1) &&
+                    (kmeans[3].getSize() == 1);
+
+            std::ofstream csv1("points4_2.csv", std::ofstream::out);
+            csv1 << kmeans;
+            csv1.close();
+
+            ClusterCounts cc("points4_2.csv");
+            pass = pass && cc.parse_and_analyze() &&
+                   (cc.get_num_clusters() == 4) &&
+                   (cc.get_num_points() == 4);
+
+            ec.result(pass);
+        }
+
+//        ec.DESC("write out to a file, 2499 points, 6 clusters - COMMENTED OUT");
+//        pass = true;
+        ec.DESC("write out to a file, 2499 points, 6 clusters (RUNS LONG)");
+
+        {
+            KMeans kmeans(3, 6, "points2499.csv", 20);
+
+            kmeans.run();
+
+            pass = (kmeans.getNumNonemptyClusters() == 6);
+
+            std::ofstream csv1("points2499_2.csv", std::ofstream::out);
+            csv1 << kmeans;
+            csv1.close();
+
+            ClusterCounts cc("points2499_2.csv");
+            pass = pass && cc.parse_and_analyze() &&
+                   (cc.get_num_clusters() == 6) &&
+                   (cc.get_num_points() == 2499);
+
+            ec.result(pass);
+        }
+//        ec.result(pass);
+    }
+}
+
+// K larger than number of points
+void test_kmeans_toofewpoints(ErrorContext &ec, unsigned int numRuns) {
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - KMeans - Too few points ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("4 points with k=8");
+
+        {
+            KMeans kmeans(5, 8, "points4.csv", 20);
+
+            kmeans.run();
+
+            // The points should end up each in its own cluster
+            pass =  (kmeans.getNumNonemptyClusters() == 4) &&
+                    (kmeans[0].getSize() == 1) &&
+                    (kmeans[1].getSize() == 1) &&
+                    (kmeans[2].getSize() == 1) &&
+                    (kmeans[3].getSize() == 1);
+
+            std::ofstream csv1("points4_2.csv", std::ofstream::out);
+            csv1 << kmeans;
+            csv1.close();
+
+            ClusterCounts cc("points4_2.csv");
+            pass = pass && cc.parse_and_analyze() &&
+                   (cc.get_num_clusters() == 4) &&
+                   (cc.get_num_points() == 4);
+
+            ec.result(pass);
+        }
+
+//        ec.DESC("2499 points, k=2520 - COMMENTED OUT");
+//        pass = true;
+        ec.DESC("2499 points, k=2520 (RUNS LONG)");
+
+        {
+            KMeans kmeans(3, 2520, "points2499.csv", 20);
+
+            kmeans.run();
+
+            pass = (kmeans.getNumNonemptyClusters() > 0) &&
+                   (kmeans.getNumNonemptyClusters() <= 2499);
+
+            std::ofstream csv1("points2499_2.csv", std::ofstream::out);
+            csv1 << kmeans;
+            csv1.close();
+
+            ClusterCounts cc("points2499_2.csv");
+            bool parse_success;
+            pass = pass && (parse_success = cc.parse_and_analyze()) &&
+                   (cc.get_num_clusters() < 2520) &&    // this is the only meaningful test for the number of clusters
+                                                        // the exact number will vary with implementation
+                   (cc.get_num_points() == 2499);
+
+            ec.result(pass);
+        }
+//        ec.result(pass);
+    }
+}
+
+
+// Check if scoring works with large points
+void test_kmeans_largepoints(ErrorContext &ec, unsigned int numRuns) {
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - KMeans - Large points ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("4 large points, k=1");
+
+        {
+            KMeans kmeans(4, 1, "points4_large.csv", 20);
+
+            kmeans.run();
+
+            pass = kmeans.getNumNonemptyClusters() == 1;
+
+            std::ofstream csv1("points4_large_2.csv", std::ofstream::out);
+            csv1 << kmeans;
+            csv1.close();
+
+            ClusterCounts cc("points4_large_2.csv");
+            bool parse_success;
+            pass = pass &&
+                   (parse_success = cc.parse_and_analyze()) &&
+                   (cc.get_num_clusters() == 1) &&
+                   (cc.get_num_points() == 4);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("4 large points, k=2");
+
+        {
+            KMeans kmeans(4, 2, "points4_large.csv", 20);
+
+            kmeans.run();
+
+            pass = kmeans.getNumNonemptyClusters() == 2;
+
+            std::ofstream csv1("points4_large_2.csv", std::ofstream::out);
+            csv1 << kmeans;
+            csv1.close();
+
+            ClusterCounts cc("points4_large_2.csv");
+            bool parse_success;
+            pass = pass &&
+                   (parse_success = cc.parse_and_analyze()) &&
+                   (cc.get_num_clusters() == 2) &&
+                   (cc.get_num_points() == 4);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("4 large points, k=3");
+
+        {
+            KMeans kmeans(4, 3, "points4_large.csv", 20);
+
+            kmeans.run();
+
+            pass = kmeans.getNumNonemptyClusters() == 3;
+
+            std::ofstream csv1("points4_large_2.csv", std::ofstream::out);
+            csv1 << kmeans;
+            csv1.close();
+
+            ClusterCounts cc("points4_large_2.csv");
+            bool parse_success;
+            pass = pass &&
+                   (parse_success = cc.parse_and_analyze()) &&
+                   (cc.get_num_clusters() ==3 ) &&
+                   (cc.get_num_points() == 4);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("4 large points, k=4");
+
+        {
+            KMeans kmeans(4, 4, "points4_large.csv", 20);
+
+            kmeans.run();
+
+            pass = kmeans.getNumNonemptyClusters() == 4;
+
+            std::ofstream csv1("points4_large_2.csv", std::ofstream::out);
+            csv1 << kmeans;
+            csv1.close();
+
+            ClusterCounts cc("points4_large_2.csv");
+            bool parse_success;
+            pass = pass &&
+                   (parse_success = cc.parse_and_analyze()) &&
+                   (cc.get_num_clusters() == 4) &&
+                   (cc.get_num_points() == 4);
+
+            ec.result(pass);
+        }
+    }
+}
+
+// Large k, less than number of points
+void test_kmeans_toomanyclusters(ErrorContext &ec, unsigned int numRuns) {
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - KMeans - Too many clusters ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+//        ec.DESC("2499 points, k=250 - COMMENTED OUT");
+//        pass = true;
+        ec.DESC("2499 points, k=250 (RUNS LONG)");
+
+        {
+            KMeans kmeans(3, 250, "points2499.csv", 20);
+
+            kmeans.run();
+
+            pass = kmeans.getNumNonemptyClusters() == 250;
+
+            std::ofstream csv1("points2499_2.csv", std::ofstream::out);
+            csv1 << kmeans;
+            csv1.close();
+
+            ClusterCounts cc("points2499_2.csv");
+            bool parse_success;
+            pass = pass && (parse_success = cc.parse_and_analyze()) &&
+                   (cc.get_num_clusters() <= 250) &&
+                   (cc.get_num_points() == 2499);
+
+            ec.result(pass);
+        }
+//        ec.result(pass);
+
+//        ec.DESC("2499 points, k=520 - COMMENTED OUT");
+//        pass = true;
+        ec.DESC("2499 points, k=520 (RUNS LONG)");
+
+        {
+            KMeans kmeans(3, 520, "points2499.csv", 20);
+
+            kmeans.run();
+
+            pass = kmeans.getNumNonemptyClusters() == 520;
+
+            std::ofstream csv1("points2499_2.csv", std::ofstream::out);
+            csv1 << kmeans;
+            csv1.close();
+
+            ClusterCounts cc("points2499_2.csv");
+            bool parse_success;
+            pass = pass && (parse_success = cc.parse_and_analyze()) &&
+                   (cc.get_num_clusters() == 520) &&
+                   (cc.get_num_points() == 2499);
+
+            ec.result(pass);
+        }
+//        ec.result(pass);
+    }
+}

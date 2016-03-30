@@ -307,7 +307,7 @@ namespace Clustering {
 
     void Point::rewindIdGen() {
 
-        --__idGen;
+        __idGen--;
 
     }
 
