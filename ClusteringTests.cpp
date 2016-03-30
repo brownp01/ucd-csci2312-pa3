@@ -2340,303 +2340,287 @@ void test_cluster_SAO(ErrorContext &ec, unsigned int numRuns) {
 }
 
 // Centroid
-//void test_cluster_centroid(ErrorContext &ec, unsigned int numRuns) { // TODO implement
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - Cluster - Centroid ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-//        ec.DESC("new empty cluster has invalid centroid");
-//
-//        {
-//            Cluster c(10);
-//
-//            pass = !c.centroid.isValid();
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("centroid set/get");
-//
-//        {
-//            // test centroid after set, get
-//            Cluster c(10);
-//
-//            Point p(10);
-//            for (int i = 0; i < 10; i++)
-//                p[i] = 4.5 * i * i + 3.4 * i + 5.6;
-//
-//            c.centroid.set(p);
-//
-//            pass = c.centroid.equal(p) && c.centroid.isValid();
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("centroid compute (+ invalidation on add/remove)");
-//
-//        {
-//            // test centroid compute
-//            Cluster c(10);
-//
-//            Point p1(10);
-//            for (int i = 0; i < 10; i++) p1[i] = 1;
-//            c.add(p1);
-//            Point p2(10);
-//            for (int i = 0; i < 10; i++) p2[i] = 2;
-//            c.add(p2);
-//            Point p3(10);
-//            for (int i = 0; i < 10; i++) p3[i] = 3;
-//            c.add(p3);
-//
-//            pass = (!c.centroid.isValid()); // test invalid here
-//
-//            c.centroid.compute();
-//
-//            pass = pass && c.centroid.isValid(); // test valid here
-//
-//            Point cent = c.centroid.get();
-//
-//            for (int i = 0; i < 10; i++)
-//                pass = pass && (cent[i] == 2); // test compute
-//
-//            c.remove(p1);
-//            c.remove(p2);
-//            c.remove(p3);
-//
-//            pass = pass && (!c.centroid.isValid()); // test invalid here
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("operator+=(const Point &rhs), operator-=(const Point &rhs)");
-//
-//        {
-//            Cluster c(10); // empty cluster
-//            c.centroid.compute(); // this will be infinity, but valid
-//            Point inf = c.centroid.get();
-//
-//            pass = c.centroid.isValid();
-//
-//            Point p(10);
-//            for (int i = 0; i < 10; i++) p[i] = 1.5;
-//
-//            c += p;
-//
-//            pass = pass && (! c.centroid.isValid());
-//
-//            c.centroid.compute();
-//
-//            pass = pass && c.centroid.isValid();
-//
-//            pass = pass && c.centroid.equal(p);
-//
-//            c -= p;
-//
-//            pass = pass && (! c.centroid.isValid());
-//
-//            c.centroid.compute();
-//
-//            pass = pass && c.centroid.equal(inf);
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("operator+= (Cluster union) no common points");
-//
-//        {
-//            Cluster c1(50), c2(50);
-//            Point   p1(50),
-//                    p2(50),
-//                    p3(50),
-//                    p4(50),
-//                    p5(50);
-//            c1.add(p1); c1.add(p2); c1.add(p3);
-//            c2.add(p4); c2.add(p5);
-//
-//            pass = (! c1.centroid.isValid()) && (! c2.centroid.isValid());
-//
-//            c1.centroid.compute(); c2.centroid.compute();
-//
-//            c1 += c2;
-//
-//            // only the lhs centroid should be invalidated
-//            pass = pass && (! c1.centroid.isValid()) && c2.centroid.isValid();
-//
-//            c1.centroid.compute();
-//
-//            pass = pass && c1.centroid.isValid() && c2.centroid.isValid();
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("operator+= (Cluster union) all common points");
-//
-//        {
-//            Cluster c1(50), c2(50);
-//            Point   p1(50),
-//                    p2(50),
-//                    p3(50),
-//                    p4(50),
-//                    p5(50);
-//            c1.add(p1); c1.add(p2); c1.add(p3); c1.add(p4); c1.add(p5);
-//            c2.add(p1); c2.add(p2); c2.add(p3); c2.add(p4); c2.add(p5);
-//
-//            pass = (! c1.centroid.isValid()) && (! c2.centroid.isValid());
-//
-//            c1.centroid.compute(); c2.centroid.compute();
-//
-//            c1 += c2;
-//
-//            // neither centroid should be invalidated - no points added
-//            pass = pass && c1.centroid.isValid() && c2.centroid.isValid();
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("operator-= (Cluster difference) no common points");
-//        {
-//            Cluster c1(50), c2(50), c3(50);
-//            Point   p1(50),
-//                    p2(50),
-//                    p3(50),
-//                    p4(50),
-//                    p5(50);
-//            c1.add(p1); c1.add(p2); c1.add(p3);
-//            c2.add(p4); c2.add(p5);
-//
-//            c1.centroid.compute(); c2.centroid.compute();
-//
-//            c3 = c1;
-//
-//            c3.centroid.compute();
-//
-//            c1 -= c2;
-//
-//            pass = c1.centroid.isValid() && c2.centroid.isValid() &&
-//                    (c1.centroid.equal(c3.centroid.get()));
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("operator-= (asymmetric Cluster difference) one common point");
-//
-//        {
-//            Cluster c1(50), c2(50), c3(50);
-//            Point   p1(50),
-//                    p2(50),
-//                    p3(50),
-//                    p4(50),
-//                    p5(50);
-//            c1.add(p1); c1.add(p2); c1.add(p3);
-//            c2.add(p3); c2.add(p4); c2.add(p5);
-//
-//            c1.centroid.compute(); c2.centroid.compute();
-//
-//            // Prepare a difference to compare to
-//            c3.add(p1); c3.add(p2);
-//
-//            c3.centroid.compute();
-//
-//            c1 -= c2;
-//
-//            pass = (! c1.centroid.isValid()) && c2.centroid.isValid();
-//
-//            c1.centroid.compute();
-//
-//            pass = pass && (c1.centroid.equal(c3.centroid.get()));
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("operator-= (asymmetric Cluster difference) two equal clusters");
-//
-//        {
-//            Cluster c1(50), c2(50), c3(50);
-//            Point   p1(50),
-//                    p2(50),
-//                    p3(50),
-//                    p4(50),
-//                    p5(50);
-//
-//            for (int i = 0; i < 50; i++) p1[i] = 2.5;
-//            for (int i = 0; i < 50; i++) p2[i] = 50.4 + i * 2.3;
-//            for (int i = 0; i < 50; i++) p3[i] = 6.4 * i * i + i * 2.3;
-//            for (int i = 0; i < 50; i++) p4[i] = i * 2.003 + 56.98;
-//            for (int i = 0; i < 50; i++) p5[i] = i + 12.3;
-//
-//            c1.add(p1); c1.add(p2); c1.add(p3); c1.add(p4); c1.add(p5);
-//            c2.add(p1); c2.add(p2); c2.add(p3); c2.add(p4); c2.add(p5);
-//
-//            c1.centroid.compute(); c2.centroid.compute();
-//
-//            pass = (c1.centroid.equal(c2.centroid.get()));
-//
-//            c1 -= c2;
-//
-//            pass = pass && (! c1.centroid.isValid()) && c2.centroid.isValid();
-//
-//            Point inf(50);
-//            for (int i = 0; i < 50; i++) inf[i] = std::numeric_limits<double>::max();
-//
-//            c1.centroid.compute();
-//
-//            pass = pass && (c1.centroid.equal(inf));
-//
-//            ec.result(pass);
-//        }
-//    }
-//}
-//
-//// Id
-//void test_cluster_id(ErrorContext &ec, unsigned int numRuns) {
-//    bool pass;
-//
-//    // Run at least once!!
-//    assert(numRuns > 0);
-//
-//    ec.DESC("--- Test - Cluster - Id ---");
-//
-//    for (int run = 0; run < numRuns; run++) {
-//
-//        ec.DESC("sequential id-s");
-//
-//        {
-//            Cluster *c[10];
-//
-//            for (int i=0; i<10; i++) c[i] = new Cluster(100);
-//
-//            pass = true;
-//            for (int i=0; i<10; i++)
-//                pass = pass && ((c[i]->getId() - c[0]->getId()) == i);
-//
-//            // cleanup
-//            for (int i=0; i<10; i++) delete c[i];
-//
-//            ec.result(pass);
-//        }
-//
-//        ec.DESC("no id generation on copy and assignment");
-//
-//        {
-//            Cluster c1(10), c2(c1), c3 = c1;
-//
-//            pass = (c1.getId() == c2.getId()) && (c1.getId() == c3.getId());
-//
-//            Cluster c4(10);
-//
-//            c4 = c3;
-//
-//            pass = pass && (c4.getId() == c3.getId());
-//
-//            ec.result(pass);
-//        }
-//    }
-//}
+void test_cluster_centroid(ErrorContext &ec, unsigned int numRuns) { // TODO implement
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - Cluster - Centroid ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("new empty cluster has invalid centroid");
+
+        {
+            Cluster c(10);
+
+            pass = !c.centroid.isValid();
+
+            ec.result(pass);
+        }
+
+
+        ec.DESC("centroid compute (+ invalidation on add/remove)");
+
+        {
+            // test centroid compute
+            Cluster c(10);
+
+            Point p1(10);
+            for (int i = 0; i < 10; i++) p1[i] = 1;
+            c.add(p1);
+            Point p2(10);
+            for (int i = 0; i < 10; i++) p2[i] = 2;
+            c.add(p2);
+            Point p3(10);
+            for (int i = 0; i < 10; i++) p3[i] = 3;
+            c.add(p3);
+
+            pass = (!c.centroid.isValid()); // test invalid here
+
+            c.centroid.compute();
+
+            pass = pass && c.centroid.isValid(); // test valid here
+
+            Point cent = c.centroid.get();
+
+            for (int i = 0; i < 10; i++)
+                pass = pass && (cent[i] == 2); // test compute
+
+            c.remove(p1);
+            c.remove(p2);
+            c.remove(p3);
+
+            pass = pass && (!c.centroid.isValid()); // test invalid here
+
+            ec.result(pass);
+        }
+
+        ec.DESC("operator+=(const Point &rhs), operator-=(const Point &rhs)");
+
+        {
+            Cluster c(10); // empty cluster
+            c.centroid.compute(); // this will be infinity, but valid
+            Point inf = c.centroid.get();
+
+            pass = c.centroid.isValid();
+
+            Point p(10);
+            for (int i = 0; i < 10; i++) p[i] = 1.5;
+
+            c += p;
+
+            pass = pass && (! c.centroid.isValid());
+
+            c.centroid.compute();
+
+            pass = pass && c.centroid.isValid();
+
+            pass = pass && c.centroid.equal(p);
+
+            c -= p;
+
+            pass = pass && (! c.centroid.isValid());
+
+            c.centroid.compute();
+
+            pass = pass && c.centroid.equal(inf);
+
+            ec.result(pass);
+        }
+
+        ec.DESC("operator+= (Cluster union) no common points");
+
+        {
+            Cluster c1(50), c2(50);
+            Point   p1(50),
+                    p2(50),
+                    p3(50),
+                    p4(50),
+                    p5(50);
+            c1.add(p1); c1.add(p2); c1.add(p3);
+            c2.add(p4); c2.add(p5);
+
+            pass = (! c1.centroid.isValid()) && (! c2.centroid.isValid());
+
+            c1.centroid.compute(); c2.centroid.compute();
+
+            c1 += c2;
+
+            // only the lhs centroid should be invalidated
+            pass = pass && (! c1.centroid.isValid()) && c2.centroid.isValid();
+
+            c1.centroid.compute();
+
+            pass = pass && c1.centroid.isValid() && c2.centroid.isValid();
+
+            ec.result(pass);
+        }
+
+        ec.DESC("operator+= (Cluster union) all common points");
+
+        {
+            Cluster c1(50), c2(50);
+            Point   p1(50),
+                    p2(50),
+                    p3(50),
+                    p4(50),
+                    p5(50);
+            c1.add(p1); c1.add(p2); c1.add(p3); c1.add(p4); c1.add(p5);
+            c2.add(p1); c2.add(p2); c2.add(p3); c2.add(p4); c2.add(p5);
+
+            pass = (! c1.centroid.isValid()) && (! c2.centroid.isValid());
+
+            c1.centroid.compute(); c2.centroid.compute();
+
+            c1 += c2;
+
+            // neither centroid should be invalidated - no points added
+            pass = pass && c1.centroid.isValid() && c2.centroid.isValid();
+
+            ec.result(pass);
+        }
+
+        ec.DESC("operator-= (Cluster difference) no common points");
+        {
+            Cluster c1(50), c2(50), c3(50);
+            Point   p1(50),
+                    p2(50),
+                    p3(50),
+                    p4(50),
+                    p5(50);
+            c1.add(p1); c1.add(p2); c1.add(p3);
+            c2.add(p4); c2.add(p5);
+
+            c1.centroid.compute(); c2.centroid.compute();
+
+            c3 = c1;
+
+            c3.centroid.compute();
+
+            c1 -= c2;
+
+            pass = c1.centroid.isValid() && c2.centroid.isValid() &&
+                    (c1.centroid.equal(c3.centroid.get()));
+
+            ec.result(pass);
+        }
+
+        ec.DESC("operator-= (asymmetric Cluster difference) one common point");
+
+        {
+            Cluster c1(50), c2(50), c3(50);
+            Point   p1(50),
+                    p2(50),
+                    p3(50),
+                    p4(50),
+                    p5(50);
+            c1.add(p1); c1.add(p2); c1.add(p3);
+            c2.add(p3); c2.add(p4); c2.add(p5);
+
+            c1.centroid.compute(); c2.centroid.compute();
+
+            // Prepare a difference to compare to
+            c3.add(p1); c3.add(p2);
+
+            c3.centroid.compute();
+
+            c1 -= c2;
+
+            pass = (! c1.centroid.isValid()) && c2.centroid.isValid();
+
+            c1.centroid.compute();
+
+            pass = pass && (c1.centroid.equal(c3.centroid.get()));
+
+            ec.result(pass);
+        }
+
+        ec.DESC("operator-= (asymmetric Cluster difference) two equal clusters");
+
+        {
+            Cluster c1(50), c2(50), c3(50);
+            Point   p1(50),
+                    p2(50),
+                    p3(50),
+                    p4(50),
+                    p5(50);
+
+            for (int i = 0; i < 50; i++) p1[i] = 2.5;
+            for (int i = 0; i < 50; i++) p2[i] = 50.4 + i * 2.3;
+            for (int i = 0; i < 50; i++) p3[i] = 6.4 * i * i + i * 2.3;
+            for (int i = 0; i < 50; i++) p4[i] = i * 2.003 + 56.98;
+            for (int i = 0; i < 50; i++) p5[i] = i + 12.3;
+
+            c1.add(p1); c1.add(p2); c1.add(p3); c1.add(p4); c1.add(p5);
+            c2.add(p1); c2.add(p2); c2.add(p3); c2.add(p4); c2.add(p5);
+
+            c1.centroid.compute(); c2.centroid.compute();
+
+            pass = (c1.centroid.equal(c2.centroid.get()));
+
+            c1 -= c2;
+
+            pass = pass && (! c1.centroid.isValid()) && c2.centroid.isValid();
+
+            Point inf(50);
+            for (int i = 0; i < 50; i++) inf[i] = std::numeric_limits<double>::max();
+
+            c1.centroid.compute();
+
+            pass = pass && (c1.centroid.equal(inf));
+
+            ec.result(pass);
+        }
+    }
+}
+//
+// Id
+void test_cluster_id(ErrorContext &ec, unsigned int numRuns) {
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - Cluster - Id ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("sequential id-s");
+
+        {
+            Cluster *c[10];
+
+            for (int i=0; i<10; i++) c[i] = new Cluster(100);
+
+            pass = true;
+            for (int i=0; i<10; i++)
+                pass = pass && ((c[i]->getId() - c[0]->getId()) == i);
+
+            // cleanup
+            for (int i=0; i<10; i++) delete c[i];
+
+            ec.result(pass);
+        }
+
+        ec.DESC("no id generation on copy and assignment");
+
+        {
+            Cluster c1(10), c2(c1), c3 = c1;
+
+            pass = (c1.getId() == c2.getId()) && (c1.getId() == c3.getId());
+
+            Cluster c4(10);
+
+            c4 = c3;
+
+            pass = pass && (c4.getId() == c3.getId());
+
+            ec.result(pass);
+        }
+    }
+}
 //
 //// Init element selection ("pickCentroids")
 //void test_cluster_initselection(ErrorContext &ec, unsigned int numRuns) {
@@ -2783,7 +2767,7 @@ void test_cluster_SAO(ErrorContext &ec, unsigned int numRuns) {
 //    }
 //}
 //
-//// operator>>, operator<<
+// operator>>, operator<<
 //void test_cluster_IO(ErrorContext &ec, unsigned int numRuns) {
 //    bool pass;
 //

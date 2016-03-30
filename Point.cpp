@@ -285,6 +285,15 @@ namespace Clustering {
 
         if (__dim <= index || index < 0)
             throw OutOfBoundsEx(index, __dim);
+
+        return __values[index];
+    }
+
+    const double &Point::operator[](unsigned int index) const {
+
+        if (__dim <= index || index < 0)
+            throw OutOfBoundsEx(index, __dim);
+
         return __values[index];
     }
 
@@ -295,6 +304,14 @@ namespace Clustering {
     unsigned int Point::getDims() const {
         return __dim;
     }
+
+    void Point::rewindIdGen() {
+
+        --__idGen;
+
+    }
+
+
 }
 
 
